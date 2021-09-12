@@ -1,0 +1,6 @@
+[Unit]
+Description=swaywm systemd user target
+Documentation=man:systemd.special(7)
+Requires=default.target
+After=default.target
+AllowIsolate=yes

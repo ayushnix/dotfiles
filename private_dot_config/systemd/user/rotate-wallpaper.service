@@ -1,0 +1,6 @@
+[Unit]
+Description=periodically rotate the wallpaper
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/swaymsg 'output * bg $(find $XDG_DATA_HOME/walls -type f | shuf -n 1) fill'

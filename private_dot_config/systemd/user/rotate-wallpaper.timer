@@ -1,0 +1,10 @@
+[Unit]
+Description=periodically rotate the wallpaper
+After=swaywm.target
+
+[Timer]
+OnBootSec=15min
+OnUnitActiveSec=30min
+
+[Install]
+WantedBy=timers.target

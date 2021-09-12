@@ -1,0 +1,12 @@
+[Unit]
+Description=Run dnscrypt-adblock once a month
+After=network-online.target
+
+[Timer]
+OnCalendar=monthly
+RandomizedDelaySec=10s
+AccuracySec=1us
+Persistent=true
+
+[Install]
+WantedBy=timers.target

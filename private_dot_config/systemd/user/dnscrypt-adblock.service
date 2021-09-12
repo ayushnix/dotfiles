@@ -1,0 +1,7 @@
+[Unit]
+Description=Run dnscrypt-adblock
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/generate-domains-blocklist -c /etc/dnscrypt/domains-blocklist.conf -o /etc/dnscrypt/blocked-names.txt
