@@ -1,0 +1,24 @@
+---
+import:
+  - ~/.config/alacritty/font.yml
+  - ~/.config/alacritty/colors.yml
+
+env:
+  TERM: xterm-256color
+
+window:
+  decorations: none
+  startup_mode: maximized
+
+scrolling:
+  history: 50000
+
+selection:
+  save_to_clipboard: true
+
+cursor:
+  style:
+    shape: Underline
+
+shell:
+  program: /bin/fish

@@ -1,0 +1,15 @@
+---
+font:
+  normal:
+    family: SF Mono
+    style: Regular
+  bold:
+    family: SF Mono
+    style: Semibold
+  italic:
+    family: SF Mono
+    style: Regular
+  bold_italic:
+    family: SF Mono
+    style: Semibold
+  size: 18.0

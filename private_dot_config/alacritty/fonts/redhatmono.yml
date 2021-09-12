@@ -1,0 +1,15 @@
+---
+font:
+  normal:
+    family: Red Hat Mono VF
+    style: Regular
+  bold:
+    family: Red Hat Mono VF
+    style: Medium
+  italic:
+    family: Red Hat Mono VF
+    style: Regular
+  bold_italic:
+    family: Red Hat Mono VF
+    style: Medium
+  size: 18.0
