@@ -1,0 +1,22 @@
+# onedark colorscheme
+set $base00 #282C34
+set $base01 #353B45
+set $base02 #3E4451
+set $base03 #545862
+set $base04 #565C64
+set $base05 #ABB2BF
+set $base06 #B6BDCA
+set $base07 #C8CCD4
+set $base08 #E06C75
+set $base09 #D19A66
+set $base0A #E5C07B
+set $base0B #98C379
+set $base0C #56B6C2
+set $base0D #61AFEF
+set $base0E #C678DD
+set $base0F #BE5046
+set $base0G #1C1E24
+
+# class                     border  bg      text    indicator child_border
+client.focused              $base00 $base00 $base0D $base04   $base04
+client.unfocused            $base00 $base0G $base04 $base00   $base00

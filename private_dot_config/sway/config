@@ -1,0 +1,266 @@
+# sway v1.6.1 configuration file
+
+#: WINDOW MANAGEMENT {{{
+
+# use the super key as the sway modifier key
+set $mod Mod4
+
+# close focused window
+bindsym $mod+w kill
+
+# change focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# move focused window
+bindsym $mod+Ctrl+h move left
+bindsym $mod+Ctrl+j move down
+bindsym $mod+Ctrl+k move up
+bindsym $mod+Ctrl+l move right
+
+# default orientation of new windows
+workspace_layout default
+
+# change container layout (tabbed, toggle split)
+bindsym $mod+t layout tabbed
+bindsym $mod+e layout toggle split
+
+# split in horizontal and orientation
+bindsym $mod+b split h
+bindsym $mod+n split v
+
+# enter and toggle fullscreen mode
+bindsym $mod+f fullscreen toggle
+bindsym $mod+Ctrl+f floating toggle
+
+# use mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+#: }}}
+
+#: WORKSPACE MANAGEMENT {{{
+
+# customize workspace names
+set $WS1 "1:"
+set $WS2 "2:"
+set $WS3 "3:"
+set $WS4 "4:"
+set $WS5 "5:"
+set $WS6 "6:"
+set $WS7 "7:"
+set $WS8 "8:"
+
+# switch to workspace
+bindsym $mod+1 workspace $WS1
+bindsym $mod+2 workspace $WS2
+bindsym $mod+3 workspace $WS3
+bindsym $mod+4 workspace $WS4
+bindsym $mod+5 workspace $WS5
+bindsym $mod+y workspace $WS6
+bindsym $mod+u workspace $WS7
+bindsym $mod+i workspace $WS8
+
+# move focused container to workspace
+bindsym $mod+Ctrl+1 move container to workspace $WS1
+bindsym $mod+Ctrl+2 move container to workspace $WS2
+bindsym $mod+Ctrl+3 move container to workspace $WS3
+bindsym $mod+Ctrl+4 move container to workspace $WS4
+bindsym $mod+Ctrl+5 move container to workspace $WS5
+bindsym $mod+Ctrl+y move container to workspace $WS6
+bindsym $mod+Ctrl+u move container to workspace $WS7
+bindsym $mod+Ctrl+i move container to workspace $WS8
+
+# cycle through workspaces
+bindsym $mod+bracketleft workspace prev
+bindsym $mod+bracketright workspace next
+
+# switch back and forth between the recent workspaces
+bindsym $mod+grave workspace back_and_forth
+
+#: }}}
+
+#: INPUT/OUTPUT SETTINGS {{{
+
+# configure the keyboard
+input type:keyboard {
+    repeat_delay 350
+    repeat_rate 35
+    xkb_layout us
+}
+
+# configure the laptop touchpad
+input type:touchpad {
+    dwt enabled
+    natural_scroll enabled
+    pointer_accel 0.5
+    scroll_factor 1.5
+    scroll_method two_finger
+    tap enabled
+    tap_button_map lrm
+}
+
+# configure the cursor
+seat seat0 {
+    hide_cursor 5000
+    xcursor_theme capitaine-cursors-light 24
+}
+
+# configure the output monitors
+set $laptop eDP-1
+set $monitor DP-2
+
+output $laptop {
+    pos 0 0 res 1920x1080
+    subpixel rgb
+    scale 1
+    scale_filter nearest
+    dpms on
+    enable
+}
+output $monitor {
+    pos 1920 0 res 3840x2160
+    subpixel rgb
+    scale 1
+    scale_filter nearest
+    dpms on
+    enable
+}
+
+workspace $WS1 output $monitor
+workspace $WS8 output $laptop
+
+bindswitch --reload --locked lid:on output $laptop disable
+bindswitch --reload --locked lid:off output $laptop enable
+
+#: }}}
+
+#: OTHER SETTINGS {{{
+
+# reload sway config or restart sway inplace
+bindsym $mod+Shift+w reload
+bindsym $mod+Shift+r restart
+
+# exit sway
+bindsym $mod+Shift+e exit
+
+# we don't want automatic back and forth
+workspace_auto_back_and_forth no
+
+# enable xwayland
+xwayland enable
+
+#: }}}
+
+#: APPEARANCE {{{
+
+# default title position
+title_align center
+
+# we don't want marks
+show_marks no
+
+# show borders only if more than one window is open
+smart_borders on
+default_border pixel 3
+default_floating_border pixel 3
+hide_edge_borders --i3 smart
+
+# set the font and colorscheme
+include fonts.conf
+include colors.conf
+
+#: BAR {{{
+
+bar {
+    id rustbar
+    status_command /usr/bin/i3status-rs $XDG_CONFIG_HOME/i3status-rust/config.toml
+    font pango:SF Mono, Font Awesome 5 Free, Font Awesome 5 Brands, 16
+    # font pango:Red Hat Mono VF, Font Awesome 5 Free, Font Awesome 5 Brands, 16
+    hidden_state show
+    mode dock
+    pango_markup enabled
+    position top
+    separator_symbol ""
+    strip_workspace_numbers yes
+    tray_output none
+    workspace_min_width 50
+    colors {
+           background $base00
+           statusline $base05
+           # state             border  bg      text
+           focused_workspace   $base00 $base00 $base0D
+           inactive_workspace  $base00 $base00 $base04
+           urgent_workspace    $base00 $base00 $base08
+        }
+    }
+
+#: }}}
+
+#: }}}
+
+#: APPLICATION WINDOW PROPERTIES {{{
+
+# assignments
+for_window [app_id="firefox"]            move container to workspace $WS4
+for_window [app_id="Chromium-browser"]   move container to workspace $WS4
+for_window [app_id="mpv"]                move container to workspace $WS6
+for_window [app_id="kvantummanager"]     move container to workspace $WS8
+for_window [app_id="qt5ct"]              move container to workspace $WS8
+for_window [app_id="gnome-tweaks"]       move container to workspace $WS8
+
+# fullscreen
+for_window [class="mpv"] fullscreen enable
+
+# float
+for_window [app_id="gnome-tweaks"]                                      focus, floating enable
+for_window [app_id="firefox" title="^Firefox - Choose User Profile$"]   focus, floating enable
+for_window [app_id="firefox" title="^Library$"]                         focus, floating enable
+for_window [app_id="firefox" title="^About Mozilla Firefox$"]           focus, floating enable
+for_window [app_id="kvantummanager"]                                    focus, floating enable
+for_window [app_id="qt5ct"]                                             focus, floating enable
+
+#: }}}
+
+#: APPLICATION SHORTCUTS {{{
+
+bindsym $mod+Return   workspace $WS1, exec alacritty
+bindsym $mod+End      workspace $WS4, exec firefox --new-instance --ProfileManager
+bindsym $mod+space    workspace $WS5, exec alacritty -e ranger
+bindsym $mod+Insert   workspace $WS6; exec 'systemctl --user restart spotifyd.service; alacritty -e spt'
+
+bindsym $mod+d        exec bemenu-run
+bindsym $mod+z        exec tessen -a
+bindsym $mod+s        exec 'grim -g "$(slurp)" - | swappy -f -'
+
+# create a pipe for wob
+# exec mkfifo $SWAYSOCK.wob && tail -f $SWAYSOCK.wob | wob
+
+# configure brightness
+# bindsym XF86MonBrightnessUp exec light -T 1.4 && light -G | cut -d '.' -f 1 > $SWAYSOCK.wob
+# bindsym XF86MonBrightnessDown exec light -T 0.72 && light -G | cut -d '.' -f 1 > $SWAYSOCK.wob
+
+#: }}}
+
+#: STARTUP {{{
+
+# set the wallpaper by selecting it randomly from $XDG_DATA_HOME/walls
+set $walls $XDG_DATA_HOME/walls
+output * bg `find $walls -type f | shuf -n 1` fill
+
+# clamshell mode and multi monitor config
+exec_always $HOME/.local/bin/clamshell
+
+# start the polkit authentication agent to allow the user to shutdown/reboot etc
+exec /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
+
+# include systemd user environment import
+include sway-userenv.conf
+
+# launch the swaywm.target for GUI user programs
+exec systemctl --user start swaywm.target
+
+#: }}}
+
+# vim:fileencoding=utf-8:foldmethod=marker
