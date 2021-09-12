@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -u
+
+if ! command -v identify > /dev/null 2>&1; then
+  printf '%s\n' 'imagemagick is not installed, unable to proceed' >&2
+  exit 1
+fi
+
+for asprat in "$@"; do
+  identify -format "%[fx:w/h]: %M\n" "$asprat"
+done
