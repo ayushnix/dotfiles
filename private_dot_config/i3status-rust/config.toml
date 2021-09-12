@@ -1,0 +1,53 @@
+[theme]
+name = "native"
+[icons]
+name = "awesome5"
+
+[[block]]
+block = "time"
+format = "%I:%M %p %a %d %b %Y"
+interval = 15
+on_click = "gsimplecal"
+icons_format = ""
+
+[[block]]
+block = "net"
+device = "wlan0"
+interval = 3
+hide_inactive = true
+hide_missing = true
+format = "{ssid} {signal_strength}"
+
+[[block]]
+block = "net"
+device = "enp2s0"
+interval = 3
+hide_inactive = true
+hide_missing = true
+format = "{ip}"
+
+[[block]]
+block = "temperature"
+collapsed = false
+interval = 5
+good = 45
+idle = 55
+info = 70
+warning = 80
+chip = "k10temp-*"
+format = "{max}"
+[block.theme_overrides]
+warning_fg = "#E06C75"
+
+#[[block]]
+#block = "backlight"
+#root_scaling = 1.4
+
+[[block]]
+block = "battery"
+device = "BAT0"
+format = "{percentage} {time}"
+interval = 30
+[block.theme_overrides]
+warning_fg = "#E06C75"
+critical_fg = "#BE5046"
