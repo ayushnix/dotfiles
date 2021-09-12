@@ -1,0 +1,17 @@
+#!/bin/sh
+
+WAPPID="$(swaymsg -t get_tree | jq -r '.. | select(.type?) | select(.focused==true) | .app_id')"
+WTITLE="$(swaymsg -t get_tree | jq -r '.. | select(.type?) | select(.focused==true) | .title')"
+XCLASS="$(swaymsg -t get_tree | jq -r '.. | select(.type?) | select(.focused==true) | .window_properties.class')"
+XINSTE="$(swaymsg -t get_tree | jq -r '.. | select(.type?) | select(.focused==true) | .window_properties.instance')"
+
+if [ "$WAPPID" != "null" ]; then
+  notify-send "The app_id is '$WAPPID' and the title is '$WTITLE'"
+  exit 0
+elif [ -n "$XCLASS" ] && [ -n "$XINSTE" ]; then
+  notify-send "The class is '$XCLASS' and the instance is '$XINSTE'"
+  exit 0
+else
+  notify-send "Unable to determine the window properties"
+  exit 1
+fi
