@@ -1,0 +1,26 @@
+# ~/.bashrc
+
+# if not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+# the default bash prompt
+PS1='[\u@\h \W]\$ '
+
+# set the umask value
+umask 027
+
+# history manipulation
+export HISTCONTROL=ignoreboth:erasedups
+export HISTFILESIZE=-1
+export HISTSIZE=-1
+export HISTTIMEFORMAT="%F %T: "
+history -a
+history -r
+
+# cd without typing cd
+shopt -s autocd
+
+# minimum aliases for making bash usable
+alias ip='ip -color'
+alias ll='ls -lAh --group-directories-first'
+alias sudo='doas'
