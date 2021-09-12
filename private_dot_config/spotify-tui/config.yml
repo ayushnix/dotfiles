@@ -1,0 +1,8 @@
+---
+behavior:
+  seek_milliseconds: 5000
+  volume_increment: 10
+  tick_rate_milliseconds: 100
+  enable_text_emphasis: false
+  show_loading_indicator: false
+  enforce_wide_search_bar: true
