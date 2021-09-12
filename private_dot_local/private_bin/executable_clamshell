@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -u
+
+readonly monitor="eDP-1"
+
+if grep -q open /proc/acpi/button/lid/LID/state; then
+  swaymsg output "$monitor" enable
+else
+  swaymsg output "$monitor" disable
+fi
