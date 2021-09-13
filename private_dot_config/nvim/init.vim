@@ -170,8 +170,11 @@ let g:pear_tree_pairs = {
 
 " MISC {{{
 let g:sneak#label = 1
+
 let g:mkdp_browser = 'chromium'
 let g:mkdp_port = '8931'
+
+autocmd BufWritePost ~/.local/share/chezmoi/* ! chezmoi apply --source-path %
 " }}}
 endif
 
