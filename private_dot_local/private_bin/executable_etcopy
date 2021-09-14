@@ -25,7 +25,7 @@ backup_files=(
 )
 
 for file in "${backup_files[@]}"; do
-  rsync -Rpt /etc/"$file" "$XDG_CONFIG_HOME"/ || {
+  rsync -Rt /etc/"$file" "$XDG_CONFIG_HOME"/ || {
     printf '%s\n' "unable to copy $file" >&2
     exit 1
   }
