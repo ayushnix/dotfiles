@@ -11,7 +11,8 @@ call plug#begin()
 " APPEARANCE -----------------------------------------------------------------
 Plug 'navarasu/onedark.nvim', Cond(!exists('g:vscode'))
 Plug 'hoob3rt/lualine.nvim', Cond(!exists('g:vscode'))
-Plug 'nvim-treesitter/nvim-treesitter', Cond(!exists('g:vscode'), {'do': ':TSUpdate'})
+Plug 'nvim-treesitter/nvim-treesitter', Cond(!exists('g:vscode'), { 'do': ':TSUpdate' })
+Plug 'cespare/vim-toml', Cond(!exists('g:vscode'))
 " EFFICIENCY -----------------------------------------------------------------
 Plug 'tpope/vim-commentary', Cond(!exists('g:vscode'))
 Plug 'tpope/vim-surround', Cond(!exists('g:vscode'))
