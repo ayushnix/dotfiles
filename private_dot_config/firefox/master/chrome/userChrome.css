@@ -1,0 +1,54 @@
+/* FIX THE STUPID ADDRESS BAR ----------------------------------------------- */
+#urlbar[breakout][breakout-extend] {
+  top: calc(
+    (var(--urlbar-toolbar-height) - var(--urlbar-height)) / 2
+  ) !important;
+  left: 0px !important;
+  width: 100% !important;
+  padding: 0px !important;
+}
+
+#urlbar-input-container {
+  border: none !important;
+  padding: 0 !important;
+}
+
+#urlbar[breakout][breakout-extend] > #urlbar-input-container {
+  height: var(--urlbar-height) !important;
+  padding: 0 !important;
+}
+
+#urlbar-background {
+  border: none !important;
+  border-color: transparent !important;
+  animation: none !important;
+}
+
+#urlbar[focused="true"] > #urlbar-background {
+  border: none !important;
+  border-color: transparent !important;
+}
+
+#urlbar[breakout][breakout-extend] > #urlbar-background {
+  border-color: none !important;
+  animation: none !important;
+  box-shadow: none !important;
+}
+/* -------------------------------------------------------------------------- */
+
+/* HIDE THE USELESS HORIZONTAL TAB BAR WHICH WASTES PIXELS ------------------ */
+#TabsToolbar {
+  display: none;
+}
+#sidebar-box #sidebar-header {
+  visibility: collapse;
+}
+/* -------------------------------------------------------------------------- */
+
+/* TWEAKS FOR TREE STYLE TABS ----------------------------------------------- */
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"]
+  + #sidebar-splitter {
+  width: 1px !important;
+  border: 0 !important;
+}
+/* -------------------------------------------------------------------------- */
