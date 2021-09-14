@@ -19,6 +19,8 @@ You'll find config files for
 - [neovim](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/nvim/init.vim)
 - [tmux](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/tmux/tmux.conf)
 - [starship](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/starship.toml)
+- [firefox user.js](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/firefox/master/user.js)
+- [firefox userChrome.css](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/firefox/master/chrome/userChrome.css)
 
 There's other config stuff as well and some [simple
 scripts](https://github.com/ayushnix/dotfiles/tree/master/private_dot_local/private_bin).
