@@ -1,0 +1,7 @@
+[Unit]
+Description=Copy files from /etc to XDG_CONFIG_HOME for version control
+After=default.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/etcopy

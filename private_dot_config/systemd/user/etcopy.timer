@@ -1,0 +1,12 @@
+[Unit]
+Description=Copy files from /etc to XDG_CONFIG_HOME for version control
+After=default.target
+
+[Timer]
+OnCalendar=weekly
+RandomizedDelaySec=10s
+AccuracySec=1us
+Persistent=true
+
+[Install]
+WantedBy=default.target
