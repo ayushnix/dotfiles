@@ -16,3 +16,8 @@ gsettings set "$gnome_schema" gtk-theme "$gtk_theme"
 gsettings set "$gnome_schema" icon-theme "$icon_theme"
 gsettings set "$gnome_schema" cursor-theme "$cursor_theme"
 gsettings set "$gnome_schema" font-name "$font_name"
+gsettings set "$gnome_schema" gtk-key-theme "Emacs"
+
+if ! grep -q 'gtk-key-theme' .config/gtk-3.0/settings.ini; then
+  printf '%s\n' "gtk-key-theme-name=Emacs" >> "$XDG_CONFIG_HOME/gtk-3.0/settings.ini"
+fi
