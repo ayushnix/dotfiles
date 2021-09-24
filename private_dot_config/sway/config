@@ -231,7 +231,7 @@ bindsym $mod+space    workspace $WS5, exec alacritty -e ranger
 bindsym $mod+Insert   workspace $WS6; exec 'systemctl --user restart spotifyd.service; alacritty -e spt'
 
 bindsym $mod+d        exec bemenu-run
-bindsym $mod+z        exec tessen -a
+bindsym $mod+z        exec tessen
 bindsym $mod+s        exec 'grim -g "$(slurp)" - | swappy -f -'
 
 # create a pipe for wob
