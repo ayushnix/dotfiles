@@ -77,7 +77,7 @@ require'nvim-treesitter.configs'.setup {
   ensure_installed = {'bash', 'fish', 'python'},
   highlight = {
     enable = true,
-    additional_vim_regex_highlighting = true,
+    additional_vim_regex_highlighting = false,
   },
 }
 EOF
