@@ -23,4 +23,3 @@ shopt -s autocd
 # minimum aliases for making bash usable
 alias ip='ip -color'
 alias ll='ls -lAh --group-directories-first'
-alias sudo='doas'
