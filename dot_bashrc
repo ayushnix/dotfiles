@@ -19,6 +19,8 @@ history -r
 
 # cd without typing cd
 shopt -s autocd
+# enable globbing
+shopt -s globstar
 
 # minimum aliases for making bash usable
 alias ip='ip -color'
