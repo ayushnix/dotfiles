@@ -1,0 +1,13 @@
+configuration {
+    modi:             "run";
+    terminal:         "alacritty";
+    matching:         "fuzzy";
+    max-history-size: 15;
+    display-run:      "🗲";
+    display-calc:     "🖩";
+    timeout {
+        delay:        120;
+        action:       "kb-cancel";
+    }
+}
+@theme "theme"

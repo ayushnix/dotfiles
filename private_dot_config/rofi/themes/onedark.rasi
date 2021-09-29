@@ -1,0 +1,168 @@
+// ONEDARK
+
+* {
+    font:                        "SF Mono 18";
+    background:                  #282C34;
+    foreground:                  #ABB2BF;
+    blue:                        #61AFEF;
+    red:                         #E06C75;
+
+    border-color:                @foreground;
+    separatorcolor:              @foreground;
+
+    normal-background:           @background;
+    normal-foreground:           @foreground;
+    selected-normal-background:  @background;
+    selected-normal-foreground:  @blue;
+    alternate-normal-background: @background;
+    alternate-normal-foreground: @foreground;
+
+    urgent-background:           @background;
+    urgent-foreground:           @red;
+    selected-urgent-background:  @red;
+    selected-urgent-foreground:  @background;
+    alternate-urgent-background: @lightbg;
+    alternate-urgent-foreground: @red;
+
+    active-background:           @background;
+    active-foreground:           @blue;
+    alternate-active-background: @lightbg;
+    alternate-active-foreground: @blue;
+    selected-active-background:  @blue;
+    selected-active-foreground:  @background;
+}
+
+/* -------------------------------------------------------------------------- */
+
+element normal.normal {
+    background-color: @normal-background;
+    text-color:       @normal-foreground;
+}
+element normal.urgent {
+    background-color: @urgent-background;
+    text-color:       @urgent-foreground;
+}
+element normal.active {
+    background-color: @active-background;
+    text-color:       @active-foreground;
+}
+element selected.normal {
+    background-color: @selected-normal-background;
+    text-color:       @selected-normal-foreground;
+}
+element selected.urgent {
+    background-color: @selected-urgent-background;
+    text-color:       @selected-urgent-foreground;
+}
+element selected.active {
+    background-color: @selected-active-background;
+    text-color:       @selected-active-foreground;
+}
+element alternate.normal {
+    background-color: @alternate-normal-background;
+    text-color:       @alternate-normal-foreground;
+}
+element alternate.urgent {
+    background-color: @alternate-urgent-background;
+    text-color:       @alternate-urgent-foreground;
+}
+element alternate.active {
+    background-color: @alternate-active-background;
+    text-color:       @alternate-active-foreground;
+}
+
+/* -------------------------------------------------------------------------- */
+
+// don't specify padding in %
+
+window {
+    background-color: @background;
+    text-color:       @foreground;
+    width:            30%;
+    border:           0.1em;
+}
+
+mainbox {
+    background-color: inherit;
+    text-color:       inherit;
+    padding:          1em 1em;
+}
+
+inputbar {
+    background-color: inherit;
+    text-color:       inherit;
+    children:         [prompt,textbox-prompt-colon,entry];
+    padding:          0em 0em 1em;
+}
+prompt {
+    background-color: inherit;
+    text-color:       inherit;
+}
+textbox-prompt-colon {
+    background-color: inherit;
+    text-color:       inherit;
+    expand:           false;
+    str:              " ";
+}
+entry {
+    background-color: inherit;
+    text-color:       inherit;
+    blink:            false;
+    placeholder:      "";
+}
+num-filtered-rows {
+    enabled:          false;
+}
+textbox-num-sep {
+    enabled:          false;
+}
+num-rows {
+    enabled:          false;
+}
+case-indicator {
+    enabled:          false;
+}
+
+message {
+    background-color: inherit;
+    text-color:       inherit;
+    border:           0.0em dash 0.0em 0.0em 0.0em;
+}
+textbox {
+    background-color: inherit;
+    text-color:       inherit;
+}
+
+listview {
+    background-color: inherit;
+    text-color:       inherit;
+    scrollbar:        false;
+}
+element {
+    background-color: inherit;
+    text-color:       inherit;
+}
+element-icon {
+    enabled:          false;
+}
+element-text {
+    background-color: inherit;
+    text-color:       inherit;
+}
+
+button {
+    background-color: inherit;
+    text-color:       inherit;
+}
+button selected {
+    background-color: @selected-normal-background;
+    text-color:       @selected-normal-foreground;
+}
+
+scrollbar {
+    enabled:          false;
+}
+sidebar {
+    background-color: @selected-normal-background;
+    text-color:       @selected-normal-foreground;
+}
