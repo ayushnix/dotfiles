@@ -149,7 +149,7 @@ bindsym $mod+Shift+e exit
 workspace_auto_back_and_forth no
 
 # enable xwayland
-xwayland enable
+xwayland disable
 
 #: }}}
 
@@ -230,9 +230,10 @@ bindsym $mod+End      workspace $WS4, exec firefox --new-instance --ProfileManag
 bindsym $mod+space    workspace $WS5, exec alacritty -e ranger
 bindsym $mod+Insert   workspace $WS6; exec 'systemctl --user restart spotifyd.service; alacritty -e spt'
 
-bindsym $mod+d        exec bemenu-run
-bindsym $mod+z        exec tessen
+bindsym $mod+d        exec rofi -show run
+bindsym $mod+z        exec tessen -b rofi
 bindsym $mod+s        exec 'grim -g "$(slurp)" - | swappy -f -'
+bindsym $mod+c        exec rofi -show calc -modi calc -no-show-match -no-sort -no-history -no-fixed-num-lines -lines 0
 
 # create a pipe for wob
 # exec mkfifo $SWAYSOCK.wob && tail -f $SWAYSOCK.wob | wob
