@@ -18,6 +18,7 @@ Plug 'tpope/vim-commentary', Cond(!exists('g:vscode'))
 Plug 'tpope/vim-surround', Cond(!exists('g:vscode'))
 Plug 'justinmk/vim-sneak', Cond(!exists('g:vscode'))
 Plug 'tmsvg/pear-tree', Cond(!exists('g:vscode'))
+Plug 'chrisbra/unicode.vim', Cond(!exists('g:vscode'))
 " LINTING --------------------------------------------------------------------
 Plug 'dense-analysis/ale', Cond(!exists('g:vscode'))
 " PREVIEW --------------------------------------------------------------------
