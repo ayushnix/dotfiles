@@ -8,8 +8,8 @@ format = """\
   $directory\
   $git_branch\
   $git_state\
-  $python\
   $status\
+  $python\
   $character\
   $jobs\
   """
@@ -34,4 +34,4 @@ truncation_length = 1
 
 [status]
 format = "[$status]($style) "
-disabled = false
+disabled = true
