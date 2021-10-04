@@ -1,10 +1,11 @@
 [Unit]
 Description=periodically rotate the wallpaper
-After=swaywm.target
+DefaultDependencies=no
+Conflicts=shutdown.target
 
 [Timer]
 OnBootSec=15min
 OnUnitActiveSec=30min
 
 [Install]
-WantedBy=timers.target
+WantedBy=swaywm.target

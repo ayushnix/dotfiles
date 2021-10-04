@@ -1,6 +1,8 @@
 [Unit]
 Description=Run dnscrypt-adblock once a month
-After=network-online.target
+DefaultDependencies=no
+Conflicts=shutdown.target
+After=network-online.service
 
 [Timer]
 OnCalendar=monthly
@@ -9,4 +11,4 @@ AccuracySec=1us
 Persistent=true
 
 [Install]
-WantedBy=timers.target
+WantedBy=default.target
