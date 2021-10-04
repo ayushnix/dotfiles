@@ -203,12 +203,13 @@ bar {
 #: APPLICATION WINDOW PROPERTIES {{{
 
 # assignments
-for_window [app_id="firefox"]            move container to workspace $WS4
-for_window [app_id="Chromium-browser"]   move container to workspace $WS4
-for_window [app_id="mpv"]                move container to workspace $WS6
-for_window [app_id="kvantummanager"]     move container to workspace $WS8
-for_window [app_id="qt5ct"]              move container to workspace $WS8
-for_window [app_id="gnome-tweaks"]       move container to workspace $WS8
+for_window [app_id="firefox"]                     move container to workspace $WS4
+for_window [app_id="Chromium-browser"]            move container to workspace $WS4
+for_window [app_id="mpv"]                         move container to workspace $WS6
+for_window [app_id="kvantummanager"]              move container to workspace $WS8
+for_window [app_id="qt5ct"]                       move container to workspace $WS8
+for_window [app_id="gnome-tweaks"]                move container to workspace $WS8
+for_window [app_id="org.qbittorrent.qBittorrent"] move container to workspace $WS8
 
 # fullscreen
 for_window [class="mpv"] fullscreen enable
