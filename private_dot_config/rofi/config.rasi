@@ -1,7 +1,7 @@
 configuration {
     modi:             "run";
     terminal:         "alacritty";
-    matching:         "fuzzy";
+    matching:         "prefix";
     max-history-size: 15;
     display-run:      "🗲";
     display-calc:     "🖩";
