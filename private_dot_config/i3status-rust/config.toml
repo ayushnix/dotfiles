@@ -29,7 +29,7 @@ format = "{ip}"
 [[block]]
 block = "temperature"
 collapsed = false
-interval = 5
+interval = 10
 good = 45
 idle = 55
 info = 70
@@ -37,7 +37,7 @@ warning = 80
 chip = "k10temp-*"
 format = "{max}"
 [block.theme_overrides]
-warning_fg = "#E06C75"
+critical_fg = "#E06C75"
 
 #[[block]]
 #block = "backlight"
