@@ -5,6 +5,10 @@ function ip -d 'use ip with colors'
     command ip -c $argv
 end
 
+function ipb -d 'show brief output of ip addr'
+    command ip -c -br -4 a
+end
+
 function rm -d 'disable rm because it is dangerous'
     echo "avoid using rm — use trash and shred instead or use /bin/rm"
     trash $argv
@@ -98,7 +102,7 @@ function prem -d 'remove a package'
 end
 
 function psea -d 'search for a package using pacman or aur (-a/--aur)'
-    argparse 'a/aur' 'f/flat' 'n/nix' -- $argv
+    argparse 'a/aur' -- $argv
     or return
 
     if set -q _flag_aur
