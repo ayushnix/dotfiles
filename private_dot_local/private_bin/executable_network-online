@@ -1,0 +1,12 @@
+#!/bin/sh
+# accept an IP address to ping and check if we have connectivity
+
+ip_addr="${1:-1.1.1.1}"
+
+pingcheck() {
+  ping -n -c 1 -w 5 "$ip_addr" > /dev/null 2>&1
+}
+
+while ! pingcheck; do
+  sleep 1
+done
