@@ -13,6 +13,7 @@ Plug 'navarasu/onedark.nvim', Cond(!exists('g:vscode'))
 Plug 'hoob3rt/lualine.nvim', Cond(!exists('g:vscode'))
 Plug 'nvim-treesitter/nvim-treesitter', Cond(!exists('g:vscode'), { 'do': ':TSUpdate' })
 Plug 'cespare/vim-toml', Cond(!exists('g:vscode'))
+Plug 'junegunn/goyo.vim', Cond(!exists('g:vscode'))
 " EFFICIENCY -----------------------------------------------------------------
 Plug 'tpope/vim-commentary', Cond(!exists('g:vscode'))
 Plug 'tpope/vim-surround', Cond(!exists('g:vscode'))
@@ -141,24 +142,23 @@ let g:ale_yaml_yamllint_options = '-c $XDG_CONFIG_HOME/yamllint/config'
 let g:ale_linters = {
 \   'sh': ['shellcheck'],
 \   'python': ['flake8'],
+\   'json': ['jq'],
 \   'yaml': ['yamllint'],
-\   'css': ['stylelint'],
-\   'javascript': ['eslint']
+\   'css': ['stylelint']
 \}
 
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
 \   'sh': ['shfmt'],
 \   'python': ['yapf'],
+\   'json': ['jq'],
 \   'yaml': ['prettier'],
-\   'css': ['prettier'],
-\   'javascript': ['eslint']
+\   'css': ['prettier']
 \}
 " }}}
 
 " PEAR {{{
 let g:pear_tree_smart_openers = 1
-let g:pear_tree_smart_closers = 1
 let g:pear_tree_smart_backspace = 1
 let g:pear_tree_pairs = {
             \ '(': {'closer': ')'},
