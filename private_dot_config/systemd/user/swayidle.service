@@ -1,0 +1,12 @@
+[Unit]
+Description=idle action manager for swaywm
+Documentation=man:swayidle(1)
+BindsTo=swaywm.target
+After=swaywm.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/swayidle
+
+[Install]
+WantedBy=swaywm.target

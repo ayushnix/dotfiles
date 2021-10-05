@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# clear the cached GPG keys
+gpg-connect-agent reloadagent /bye > /dev/null || {
+  printf '%s\n' "unable to clear the GPG cache" >&2
+  exit 1
+}
+
+# clear the cached SSH keys
+ssh-add -D > /dev/null || {
+  printf '%s\n' "unable to clear the SSH keys" >&2
+  exit 1
+}
+
+# clear the clipboard
+wl-copy --clear
+
+# close password store
+pass close > /dev/null || {
+  printf '%s\n' "unable to close password store" >&2
+  exit 1
+}
+
+# TODO: enable usbguard while locked and disable after unlocked
+
+# execute swaylock
+# swaylock, as it is right now, is mostly a joke like cinnamon screenlock is/was
+# needless to say, it shouldn't be relied upon for security, whatsoever
+# https://github.com/swaywm/swaylock/issues/163
+# see this as well - https://github.com/swaywm/wlroots/issues/2706
+swaylock || "$HOME"/.local/bin/scrlck

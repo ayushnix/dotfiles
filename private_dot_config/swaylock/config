@@ -1,0 +1,8 @@
+ignore-empty-password
+show-failed-attempts
+daemonize
+image=$XDG_DATA_HOME/walls/neutral/16x9/irithyll-boreal-valley-1.jpeg
+indicator-caps-lock
+scaling=fill
+font=Inter
+font-size=16
