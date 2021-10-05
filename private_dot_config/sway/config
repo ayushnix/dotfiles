@@ -254,9 +254,6 @@ output * bg `find $walls -type f | shuf -n 1` fill
 # clamshell mode and multi monitor config
 exec_always $HOME/.local/bin/clamshell
 
-# start the polkit authentication agent to allow the user to shutdown/reboot etc
-exec /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
-
 # include systemd user environment import
 include sway-userenv.conf
 
