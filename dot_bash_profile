@@ -39,5 +39,6 @@ if [[ -z "${DISPLAY}" ]] && [[ "$(tty)" == "/dev/tty1" ]]; then
   export XDG_SESSION_TYPE=wayland
   export XDG_CURRENT_DESKTOP=sway
   # sway spams the journal if xwayland is enabled
-  exec sway > /dev/null 2>&1
+  # exec sway > /dev/null 2>&1
+  exec systemd-cat -t sway sway
 fi
