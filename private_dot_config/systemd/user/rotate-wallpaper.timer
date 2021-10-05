@@ -2,6 +2,8 @@
 Description=periodically rotate the wallpaper
 DefaultDependencies=no
 Conflicts=shutdown.target
+BindsTo=swaywm.target
+After=swaywm.target
 
 [Timer]
 OnBootSec=15min
