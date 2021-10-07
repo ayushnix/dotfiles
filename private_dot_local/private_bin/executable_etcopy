@@ -4,19 +4,12 @@
 # permissions assuming that the files and directories to be copied over to
 # XDG_CONFIG_HOME have a umask of 022
 
-set -uo pipefail
-readonly PATH="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
-export PATH
-umask 077
-
 if ! command -v rsync > /dev/null 2>&1; then
   printf '%s\n' "unable to proceed, rsync isn't installed" >&2
   exit 1
 fi
 
 backup_files=(
-  "dnscrypt-proxy/blocked-ips.txt" "dnscrypt-proxy/cloaking-rules.txt"
-  "dnscrypt-proxy/dnscrypt-proxy.toml" "dnscrypt-proxy/domains-blocklist.conf"
   "pacman.d/hooks/100-systemd-boot.hook" "pacman.d/hooks/101-export-explicit-pkgs.hook"
   "pacman.d/hooks/101-export-optional-pkgs.hook" "sysctl.d/21-networking-performance.conf"
   "sysctl.d/22-stack-harden.conf" "sysctl.d/23-virtual-memory.conf"
