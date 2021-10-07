@@ -3,4 +3,4 @@ Description=Run dnscrypt-adblock
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/generate-domains-blocklist -c /etc/dnscrypt-proxy/domains-blocklist.conf -o /etc/dnscrypt-proxy/blocked-names.txt
+ExecStart=%h/.local/bin/dnscrypt-adblock
