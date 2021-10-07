@@ -1,0 +1,81 @@
+#!/bin/sh
+#
+# generate domain blocklist file for dnscrypt-proxy and send it to the router
+#
+# Why not generate the domain blocklist on the router itself? Simple, because
+# my router doesn't have a lot of storage capacity and it doesn't have python
+# installed which is needed to execute $genblock_bin. It also more natural and
+# easier for me to monitor my workstation rather than my router.
+#
+# This script mounts the entire filesystem of my router to /mnt using sshfs,
+# generates the latest domain blocklist, and copies it to the router.
+
+# initialize the global variables
+readonly genblock_bin="generate-domains-blocklist"
+readonly genblock_url="https://raw.githubusercontent.com/DNSCrypt/dnscrypt-proxy/master/utils/generate-domains-blocklist/generate-domains-blocklist.py"
+readonly blocklist_path="/mnt/sun/etc/dnscrypt-proxy2/blocked-names.txt"
+readonly router_hostname="sun"
+readonly dnshome="${XDG_DATA_HOME:-$HOME/.local/share}/dnscrypt-proxy"
+
+_die() {
+  printf '%s\n' "$1" >&2
+  exit 1
+}
+
+# could've used an array for all the dependencies but I guess using /bin/sh is
+# fine for this script
+check_dependencies() {
+  if ! command -v sshfs > /dev/null 2>&1; then
+    _die "unable to find sshfs"
+  fi
+  if ! command -v curl > /dev/null 2>&1; then
+    _die "unable to find curl"
+  fi
+}
+
+prepare_script() {
+  # download generate-domains-blocklist.py script
+  curl -s -o "$dnshome/$genblock_bin" "$genblock_url" \
+    || _die "unable to download domain generation script"
+  chmod +x "$dnshome/$genblock_bin" \
+    || _die "unable to make domain generation script executable"
+}
+
+main() {
+  if [ -n "$PWD" ]; then
+    pwd="$PWD"
+  fi
+
+  # generate the blocklist
+  # need to cd to the directory where the script is to prevent error
+  cd "$dnshome"/ || _die "unable to cd to domain generation script location"
+  "./$genblock_bin" -c domains-blocklist.conf -o blocked-names.txt > /dev/null 2>&1 \
+    || _die "unable to generate domain blocklist"
+
+  # have some size limit to not overwhelm the router
+  blocklist_size="$(du -k blocked-names.txt)"
+  if [ "${blocklist_size%%[[:blank:]]*}" -gt 5000 ]; then
+    _die "the blocklist is too large"
+  fi
+
+  # mount the filesystem of the router
+  if ! [ -f "$blocklist_path" ]; then
+    sshfs "$router_hostname":/ /mnt/"$router_hostname"/ \
+      || _die "unable to mount $router_hostname's filesystem to /mnt"
+  fi
+
+  # copy the generated domain blocklist file to the router
+  if [ -f "$blocklist_path" ]; then
+    cp "$dnshome"/blocked-names.txt "$blocklist_path" \
+      || _die "unable to copy domain blocklist"
+    printf '%s\n' "dnscrypt adblock list successfully updated"
+  else
+    _die "Is the router filesystem mounted?"
+  fi
+
+  cd "$pwd" > /dev/null 2>&1 || cd "$HOME" || false
+}
+
+prepare_script
+check_dependencies
+main "$@"
