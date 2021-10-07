@@ -27,17 +27,9 @@ hide_missing = true
 format = "{ip}"
 
 [[block]]
-block = "temperature"
-collapsed = false
-interval = 10
-good = 45
-idle = 55
-info = 70
-warning = 80
-chip = "k10temp-*"
-format = "{max}"
-[block.theme_overrides]
-critical_fg = "#E06C75"
+block = "cpu"
+interval = 5
+format = "{utilization}"
 
 #[[block]]
 #block = "backlight"
