@@ -149,6 +149,22 @@ function errlogs -d 'show the errors in logs since boot'
 end
 #: }}}
 
+#: FISH ABBREVIATIONS {{{
+if status --is-interactive
+#: GIT {{{
+    abbr -a -g -- gits 'git status'
+    abbr -a -g -- gita 'git add'
+    abbr -a -g -- gitc 'git commit'
+    abbr -a -g -- gitd 'git diff'
+    abbr -a -g -- gitl 'git log --decorate --graph --all --oneline'
+    abbr -a -g -- gitpl 'git pull'
+    abbr -a -g -- gitps 'git push'
+    abbr -a -g -- gitr 'git rebase'
+    abbr -a -g -- gitsw 'git switch'
+#: }}}
+end
+#: }}}
+
 starship init fish | source
 
 # vim:fileencoding=utf-8:foldmethod=marker
