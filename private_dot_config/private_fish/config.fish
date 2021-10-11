@@ -130,14 +130,6 @@ function pacpre -d 'use fzf to preview information of pacman packages'
 end
 #: }}}
 
-#: GIT ALIASES {{{
-function pasync -d 'sync the password store repository with jupiter'
-    pass git pull --rebase jupiter
-    pass git push --all jupiter
-    ssh jupiter 'cd .password-store && git --work-tree=./ reset --hard'
-end
-#: }}}
-
 #: SYSTEMD ALIASES {{{
 function pw -d 'power off the machine'
     confirm systemctl poweroff
