@@ -1,0 +1,20 @@
+#!/bin/sh
+
+counter=1
+
+while read -r commit_msg; do
+  if [ "$counter" -eq 1 ] && [ "${#commit_msg}" -ge 51 ]; then
+    printf '%s\n' "The commit message summary was ${#commit_msg} characters long." >&2
+    printf '%s\n' "Please modify it to make it less than or equal to 50 characters" >&2
+    exit 1
+  elif [ "$counter" -eq 2 ] && [ -n "${commit_msg}" ]; then
+    printf '%s\n' "The second line of the commit message should be empty." >&2
+    exit 1
+  elif [ "$counter" -ge 3 ] && [ "${#commit_msg}" -ge 73 ]; then
+    printf '%s\n' "The commit message details at line number $counter was ${#commit_msg} characters long." >&2
+    printf '%s\n' "Please modify it to make it less than or equal to 72 characters" >&2
+    exit 1
+  fi
+  : $((counter = counter + 1))
+done < "$1"
+unset -v counter

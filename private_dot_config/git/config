@@ -12,6 +12,7 @@
 
 [core]
     editor = nvim
+    hooksPath = ~/.config/git/hooks/
 
 [credential]
     helper = cache --timeout=3600
