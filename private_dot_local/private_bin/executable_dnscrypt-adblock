@@ -11,10 +11,10 @@
 # generates the latest domain blocklist, and copies it to the router.
 
 # initialize the global variables
+readonly router_hostname="${ROUTER_HOSTNAME:-sun}"
 readonly genblock_bin="generate-domains-blocklist"
 readonly genblock_url="https://raw.githubusercontent.com/DNSCrypt/dnscrypt-proxy/master/utils/generate-domains-blocklist/generate-domains-blocklist.py"
-readonly blocklist_path="/mnt/sun/etc/dnscrypt-proxy2/blocked-names.txt"
-readonly router_hostname="sun"
+readonly blocklist_path="/mnt/$router_hostname/etc/dnscrypt-proxy2/blocked-names.txt"
 readonly dnshome="${XDG_DATA_HOME:-$HOME/.local/share}/dnscrypt-proxy"
 
 _die() {
