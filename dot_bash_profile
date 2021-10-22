@@ -39,6 +39,7 @@ if [[ -z "${DISPLAY}" ]] && [[ "$(tty)" == "/dev/tty1" ]]; then
   export XDG_SESSION_TYPE=wayland
   export XDG_CURRENT_DESKTOP=sway
   # sway spams the journal if xwayland is enabled
-  # exec sway > /dev/null 2>&1
-  exec systemd-cat -t sway sway
+  # even if it's disabled, libinput spams the journal saying my system
+  # (apparently, it means the compositor) is "too slow"
+  exec sway > /dev/null 2>&1
 fi
