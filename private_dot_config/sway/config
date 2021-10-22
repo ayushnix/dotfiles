@@ -131,8 +131,8 @@ output $monitor {
 workspace $WS1 output $monitor
 workspace $WS8 output $laptop
 
-bindswitch --reload --locked lid:on output $laptop disable
-bindswitch --reload --locked lid:off output $laptop enable
+bindswitch --reload --locked lid:on output $laptop disable, output $monitor enable
+bindswitch --reload --locked lid:off output $laptop enable, output $monitor disable
 
 #: }}}
 
@@ -204,7 +204,7 @@ bar {
 
 # assignments
 for_window [app_id="firefox"]                     move container to workspace $WS4
-for_window [app_id="Chromium-browser"]            move container to workspace $WS4
+for_window [app_id="chromium"]                    move container to workspace $WS4
 for_window [app_id="mpv"]                         move container to workspace $WS6
 for_window [app_id="kvantummanager"]              move container to workspace $WS8
 for_window [app_id="qt5ct"]                       move container to workspace $WS8
@@ -235,6 +235,7 @@ bindsym $mod+d        exec rofi -show run
 bindsym $mod+z        exec tessen -b rofi
 bindsym $mod+s        exec 'grim -g "$(slurp)" - | swappy -f -'
 bindsym $mod+c        exec rofi -show calc -modi calc -no-show-match -no-sort -no-history -no-fixed-num-lines -lines 0
+bindsym $mod+m        exec scrlck
 
 # create a pipe for wob
 # exec mkfifo $SWAYSOCK.wob && tail -f $SWAYSOCK.wob | wob
