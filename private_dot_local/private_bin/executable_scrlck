@@ -7,7 +7,7 @@ gpg-connect-agent reloadagent /bye > /dev/null || {
 }
 
 # clear the cached SSH keys
-ssh-add -D > /dev/null || {
+ssh-add -D 2> /dev/null || {
   printf '%s\n' "unable to clear the SSH keys" >&2
   exit 1
 }
@@ -18,7 +18,6 @@ wl-copy --clear
 # close password store
 pass close > /dev/null || {
   printf '%s\n' "unable to close password store" >&2
-  exit 1
 }
 
 # TODO: enable usbguard while locked and disable after unlocked
