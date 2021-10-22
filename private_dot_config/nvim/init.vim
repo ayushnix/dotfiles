@@ -24,6 +24,7 @@ Plug 'chrisbra/unicode.vim', Cond(!exists('g:vscode'))
 Plug 'dense-analysis/ale', Cond(!exists('g:vscode'))
 " PREVIEW --------------------------------------------------------------------
 Plug 'iamcco/markdown-preview.nvim', Cond(!exists('g:vscode'), { 'do': 'cd app && yarn install' })
+Plug 'ellisonleao/glow.nvim', Cond(!exists('g:vscode'))
 call plug#end()
 " }}}
 
@@ -173,7 +174,7 @@ let g:pear_tree_pairs = {
 " MISC {{{
 let g:sneak#label = 1
 
-let g:mkdp_browser = 'chromium'
+let g:mkdp_browser = 'firefox'
 let g:mkdp_port = '8931'
 
 autocmd BufWritePost ~/.local/share/chezmoi/* ! chezmoi apply --source-path %
