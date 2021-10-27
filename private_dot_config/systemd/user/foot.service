@@ -1,0 +1,12 @@
+[Unit]
+Description=Run the foot terminal in server mode
+BindsTo=swaywm.target
+After=swaywm.target
+
+[Service]
+Type=simple
+Restart=on-failure
+ExecStart=/usr/bin/foot -s
+
+[Install]
+WantedBy=swaywm.target

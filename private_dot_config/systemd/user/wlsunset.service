@@ -1,0 +1,12 @@
+[Unit]
+Description=set monitor gamma using wlsunset
+Documentation=man:wlsunset(1)
+BindsTo=swaywm.target
+After=swaywm.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/wlsunset -l 19 -L 73
+
+[Install]
+WantedBy=swaywm.target
