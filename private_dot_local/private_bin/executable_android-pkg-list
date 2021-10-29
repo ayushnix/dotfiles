@@ -1,0 +1,53 @@
+#!/bin/bash
+#
+# This script helps connect to your Android and generates the list of
+# user-installed packages. It assumes that you've enabled "Wireless Debugging"
+# on your Android, have paired your device with your Android, and only need to
+# connect to it, if not already connected.
+#
+# The only dependency that this script has is adb, besides bash itself.
+#
+# If you want to use this script, you can pass the hostname of your Android as
+# an argument
+#
+# $ android-pkg-list my-android-host-name
+
+if ! command -v adb > /dev/null 2>&1; then
+  printf "%s\n" "adb is not installed" >&2
+  exit 1
+fi
+
+connect_android() {
+  printf "%s\n" "Enter the port number of $android_hostname:"
+  read -r portnum
+  adb connect "$android_hostname":"$portnum" > /dev/null || {
+    printf "%s\n" "Unable to connect to $android_hostname"
+    exit 1
+  }
+}
+
+gen_pkg_list() {
+  local -a pkg_list
+  local pkglist_file
+  mapfile -t pkg_list < <(adb shell "pm list packages -3")
+  pkglist_file="${XDG_DATA_HOME:-$HOME/.local/share}/android-pkgs.txt"
+
+  printf "%s\n" "${pkg_list[@]#*:}" > "$pkglist_file"
+}
+
+main() {
+  local android_hostname="${1:-venus}"
+  shift
+
+  # this loop is needed because, sometimes, a connection between your host and
+  # Android may not be established in time for the `gen_pkg_list` function to
+  # succeed
+  while ! adb devices | grep -q "$android_hostname"; do
+    connect_android
+    sleep 1
+  done
+
+  gen_pkg_list
+}
+
+main "$@"
