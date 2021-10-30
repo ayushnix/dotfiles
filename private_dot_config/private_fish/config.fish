@@ -9,11 +9,6 @@ function ipb -d 'show brief output of ip addr'
     command ip -c -br -4 a
 end
 
-function rm -d 'disable rm because it is dangerous'
-    echo "avoid using rm — use trash and shred instead or use /bin/rm"
-    trash $argv
-end
-
 function vim -d 'use neovim instead of vim'
     nvim $argv
 end
@@ -162,8 +157,15 @@ if status --is-interactive
     abbr -a -g -- gitr 'git rebase'
     abbr -a -g -- gitsw 'git switch'
 #: }}}
+#: SYSTEMD {{{
+    abbr -a -g -- dsysre 'doas systemctl restart'
+    abbr -a -g -- sysst 'systemctl status'
+#: }}}
 end
 #: }}}
+
+bind \c\[27\;5\;13~ 'execute'
+bind \e\[27\;5\;13~ 'execute'
 
 starship init fish | source
 
