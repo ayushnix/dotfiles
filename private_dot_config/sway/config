@@ -226,10 +226,10 @@ for_window [app_id="qt5ct"]                                             focus, f
 
 #: APPLICATION SHORTCUTS {{{
 
-bindsym $mod+Return   workspace $WS1, exec alacritty
+bindsym $mod+Return   workspace $WS1, exec foot
 bindsym $mod+End      workspace $WS4, exec firefox --new-instance --ProfileManager
-bindsym $mod+space    workspace $WS5, exec alacritty -e ranger
-bindsym $mod+Insert   workspace $WS6; exec 'systemctl --user restart spotifyd.service; alacritty -e spt'
+bindsym $mod+space    workspace $WS5, exec footclient ranger
+bindsym $mod+Insert   workspace $WS6; exec 'systemctl --user restart spotifyd.service; footclient spt'
 
 bindsym $mod+d        exec rofi -show run
 bindsym $mod+z        exec tessen -b rofi
