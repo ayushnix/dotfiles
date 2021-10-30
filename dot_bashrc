@@ -9,11 +9,7 @@ PS1='[\u@\h \W]\$ '
 # set the umask value
 umask 027
 
-# history manipulation
-export HISTCONTROL=ignoreboth:erasedups
-export HISTFILESIZE=-1
-export HISTSIZE=-1
-export HISTTIMEFORMAT="%F %T: "
+# fix bash history maintenance
 history -a
 history -r
 
@@ -22,6 +18,7 @@ shopt -s autocd
 # enable globbing
 shopt -s globstar
 
-# minimum aliases for making bash usable
+# a minimal set of aliases for making bash usable
 alias ip='ip -color'
+alias ipb='ip -color -br -4 a'
 alias ll='ls -lAh --group-directories-first'

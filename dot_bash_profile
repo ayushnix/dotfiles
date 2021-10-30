@@ -1,8 +1,20 @@
 # ~/.bash_profile
 
 # source ~/.bashrc if it exists
-# shellcheck disable=SC1090
-[[ -f ~/.bashrc ]] && . ~/.bashrc
+if [[ -f "$HOME"/.bashrc ]]; then
+  . "$HOME"/.bashrc
+fi
+
+# add ~/.local/bin to PATH if it exists
+if [ -d "$HOME/.local/bin" ]; then
+  PATH="$HOME/.local/bin:$PATH"
+fi
+
+# fix bash history maintenance
+export HISTCONTROL=ignoreboth:erasedups
+export HISTFILESIZE=-1
+export HISTSIZE=-1
+export HISTTIMEFORMAT="%F %T: "
 
 # XDG configuration
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -13,22 +25,18 @@ export XDG_STATE_HOME="$HOME/.local/state"
 # user specific environment variables
 export EDITOR=nvim
 export BAT_THEME=TwoDark
-export PATH="$HOME/.local/bin:$PATH"
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 export LIBVA_DRIVER_NAME=radeonsi
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 export WG_COLOR_MODE=always
 export WG_HIDE_KEYS=always
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 export PASSWORD_STORE_DIR="$XDG_DATA_HOME/.password-store"
 export PASSWORD_STORE_CLIP_TIME=10
 export PASSWORD_STORE_ENABLE_EXTENSIONS=true
-# yeah, I know, this is ugly and inelegant but the author of bemenu doesn't want config files
 BEMENU_OPTIONS=("-i -l 10 -w --scrollbar=autohide -n --fn 'SF Mono 16' \
                  --nb '#282C34' --nf '#ABB2BF' --tb '#282C34' --tf '#ABB2BF' \
                  --fb '#282C34' --ff '#ABB2BF' --hf '#ABB2BF' --hb '#3E4451' \
                  --sb '#282C34' --sf '#61AFEF' --scb '#282C34' --scf '#61AFEF'")
-BEMENU_OPTS="${BEMENU_OPTIONS[*]}"
-export BEMENU_OPTS
+export BEMENU_OPTS="${BEMENU_OPTIONS[*]}"
 
 # start sway automatically after logging in
 if [[ -z "${DISPLAY}" ]] && [[ "$(tty)" == "/dev/tty1" ]]; then
