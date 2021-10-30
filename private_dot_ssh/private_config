@@ -6,14 +6,23 @@ Host *
   AddKeysToAgent yes
 
 Host sun
-  Hostname sun
+  Hostname sun.ayushnix.com
   User root
+  CertificateFile ~/.ssh/id_neptune-cert.pub
   IdentityFile ~/.ssh/id_neptune
   IdentitiesOnly yes
 
 Host jupiter
-  Hostname jupiter
+  Hostname jupiter.ayushnix.com
   User europa
+  CertificateFile ~/.ssh/id_neptune-cert.pub
+  IdentityFile ~/.ssh/id_neptune
+  IdentitiesOnly yes
+
+Host ceres
+  Hostname ceres.ayushnix.com
+  User miller
+  CertificateFile ~/.ssh/id_neptune-cert.pub
   IdentityFile ~/.ssh/id_neptune
   IdentitiesOnly yes
 
