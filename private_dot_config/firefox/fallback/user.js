@@ -1,6 +1,3 @@
-user_pref("geo.enabled",                                           false);
-user_pref("media.peerconnection.ice.no_host",                       true);
-user_pref("beacon.enabled",                                        false);
 user_pref("network.IDN_show_punycode",                              true);
 user_pref("ui.caretBlinkTime",                                         0);
 user_pref("ui.key.menuAccessKeyFocuses",                           false);

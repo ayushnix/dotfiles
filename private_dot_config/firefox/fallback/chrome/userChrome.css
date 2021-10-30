@@ -40,14 +40,4 @@
 #TabsToolbar {
   display: none;
 }
-#sidebar-box #sidebar-header {
-  visibility: collapse;
-}
-/* -------------------------------------------------------------------------- */
-
-/* TWEAKS FOR TREE STYLE TABS ----------------------------------------------- */
-#sidebar-box + #sidebar-splitter {
-  width: 1px !important;
-  border: 0 !important;
-}
 /* -------------------------------------------------------------------------- */
