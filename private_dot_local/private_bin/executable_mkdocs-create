@@ -1,0 +1,73 @@
+#!/bin/bash
+#
+# This script helps create a new mkdocs markdown file with some YAML
+# frontmatter including 'title', 'summary', and 'date'.
+
+title=""
+summary=""
+
+validate_file_path() {
+  local file_path="$1"
+  local regex="^[[:alpha:]][[:alnum:]\/\-_]+\.md$"
+
+  if [[ "$file_path" =~ $regex ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+yaml_metadata_gen() {
+  local curr_date
+  curr_date="$(date +%F)"
+
+  {
+    printf "%s\n" "---"
+    printf "%s\n" "title: \"${title:-"Write a Title"}\" "
+    printf "%s\n" "summary: \"${summary:-"Write a Summary"}\""
+    printf "%s\n" "date: $curr_date"
+    printf "%s\n\n\n" "---"
+  } > "$1"
+}
+
+show_help() {
+  printf "%s\n\n" "mkdocs-create - create a new markdown file with YAML frontmatter"
+  printf "%s\n\n" "Usage:"
+  printf "%s\n" "  mkdocs-create -t <TITLE> -s <SUMMARY> <RELATIVE_FILE_PATH>"
+  printf "%s\n\n" "  mkdocs-create -h"
+}
+
+main() {
+  local opt OPTIND
+
+  OPTIND=1
+  while getopts ":t:s:h" opt; do
+    case "$opt" in
+      t) title="$OPTARG" ;;
+      s) summary="$OPTARG" ;;
+      h)
+        show_help
+        exit 0
+        ;;
+      \?)
+        printf "%s\n" "Invalid Option! -$OPTARG" >&2
+        exit 1
+        ;;
+      :)
+        printf "%s\n" "-$OPTARG requires an argument" >&2
+        exit 1
+        ;;
+    esac
+  done
+  shift "$((OPTIND - 1))"
+
+  if ! validate_file_path "$@"; then
+    printf "%s\n" "Invalid Path!" >&2
+    exit 1
+  fi
+  yaml_metadata_gen "$@"
+  shift
+  unset -v title summary
+}
+
+main "$@"
