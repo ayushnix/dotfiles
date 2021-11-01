@@ -176,8 +176,6 @@ let g:sneak#label = 1
 
 let g:mkdp_browser = 'firefox'
 let g:mkdp_port = '8931'
-
-autocmd BufWritePost ~/.local/share/chezmoi/* ! chezmoi apply --source-path %
 " }}}
 endif
 
