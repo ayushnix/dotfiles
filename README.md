@@ -13,12 +13,13 @@ secrets using my password manager, [pass](https://www.passwordstore.org/), when 
 You'll find config files for
 
 - [sway](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/sway/config)
-- [i3status-rust](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/i3status-rust/config.toml)
-- [fish](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/private_fish/config.fish)
-- [alacritty](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/alacritty/alacritty.yml)
 - [neovim](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/nvim/init.vim)
+- [lf](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/lf/lfrc)
+- [fish](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/private_fish/config.fish)
+- [foot](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/foot/foot.ini)
 - [tmux](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/tmux/tmux.conf)
 - [starship](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/starship.toml)
+- [i3status-rust](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/i3status-rust/config.toml)
 - [firefox user.js](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/firefox/master/user.js)
 - [firefox userChrome.css](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/firefox/master/chrome/userChrome.css)
 
