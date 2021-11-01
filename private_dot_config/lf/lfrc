@@ -1,11 +1,27 @@
 # lf r26
 # ------
+#
+# ':'  - input command manually
+# '$'  - execute command without interaction
+# '%'  - execute command with interaction
+# '!'  - execute command and wait for it to finish
+# '&'  - execute command in the background and don't use the lf window
+# 'f'  - a file you're hovering on (don't quote it)
+# 'fs' - a selection of files (don't quote it)
+# 'fx' - automatically choose between 'f' and 'fs' (don't quote it)
+# the default file separator when using 'fs' and 'fx' is "\n"
+# ~/.local/share/lf/files - this file stores the mode (copy or move)
+#                           and the list of selected files
 
 # automatically quit server when no clients are present
 set autoquit
 
 # show hidden files by default
 set hidden
+
+# set the IFS variable to allow performing various commands
+# we'll set it to the default IFS value of bash, a space, a tab, and a newline
+set ifs "\n"
 
 # show the size of directories and files
 set info 'size'
@@ -22,10 +38,63 @@ set timefmt '15:04 Mon _2 Jan 2006'
 # set the preview command
 set previewer ~/.local/bin/prv
 
-cmd open &{{
-    test -L "$f" && f=$(readlink -f "$f")
-    case $(file -b --mime-type "$f") in
-        text/* | application/json) foot "$EDITOR" "$f" ;;
-        video/*) mpv --no-terminal "$f" ;;
+# custom mkdir command
+cmd mkdir ${{
+    IFS=" "
+    mkdir -p -- "$*"
+}}
+
+# custom touch command
+cmd touch ${{
+    IFS=" "
+    touch -- "$*"
+}}
+
+# custom trash command
+# won't use gio trash/trash-cli, they don't allow changing trash location
+$mkdir -p /data/others/.trash
+cmd trash %{{
+    printf "%s\n" " Do you want to trash the selected file(s)? [yY/nN] "
+    read -r confirm
+    case $confirm in
+      y | Y) mv $fx /data/others/.trash ;;
+      n | N) exit 0 ;;
     esac
 }}
+map t trash
+
+# map the built-in delete command
+map D delete
+
+# y (select for copy) and P to paste relative soft-link
+# d (select for cut) and P to paste hard-link
+cmd link %{{
+    set -- $(cat ~/.local/share/lf/files)
+    mode="$1"
+    shift
+    if [ "$#" -lt 1 ]; then
+        lf -remote "send $id echo no files to link"
+        exit 0
+    fi
+    case "$mode" in
+        # symbolically copy mode is indicating a soft link
+        copy) ln -sr -t . -- "$@";;
+        # while a move mode is indicating a hard link
+        move) ln -t . -- "$@";;
+    esac
+    rm ~/.local/share/lf/files
+    lf -remote "send clear"
+}}
+map P link
+
+# yank the absolute path
+cmd yank-path $wl-copy -n $fx
+map Yp yank-path
+
+# yank the file name
+cmd yank-basename $basename -a -- $fx | wl-copy -n
+map Yn yank-basename
+
+# open with
+cmd open-with %"$@" $f
+map O push :open-with<space>
