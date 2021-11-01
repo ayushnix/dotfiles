@@ -1,0 +1,31 @@
+# lf r26
+# ------
+
+# automatically quit server when no clients are present
+set autoquit
+
+# show hidden files by default
+set hidden
+
+# show the size of directories and files
+set info 'size'
+
+# enable absolute numbering
+set number
+
+# enable relative numbering
+set relativenumber
+
+# set the format of the modification time shown at the bottom
+set timefmt '15:04 Mon _2 Jan 2006'
+
+# set the preview command
+set previewer ~/.local/bin/prv
+
+cmd open &{{
+    test -L "$f" && f=$(readlink -f "$f")
+    case $(file -b --mime-type "$f") in
+        text/* | application/json) foot "$EDITOR" "$f" ;;
+        video/*) mpv --no-terminal "$f" ;;
+    esac
+}}
