@@ -156,6 +156,7 @@ if status --is-interactive
     abbr -a -g -- gitps 'git push'
     abbr -a -g -- gitr 'git rebase'
     abbr -a -g -- gitsw 'git switch'
+    abbr -a -g -- gitcl 'git clone'
 #: }}}
 #: SYSTEMD {{{
     abbr -a -g -- dsysre 'doas systemctl restart'
