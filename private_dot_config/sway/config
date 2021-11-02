@@ -228,7 +228,7 @@ for_window [app_id="qt5ct"]                                             focus, f
 
 bindsym $mod+Return   workspace $WS1, exec foot
 bindsym $mod+End      workspace $WS4, exec firefox --new-instance --ProfileManager
-bindsym $mod+space    workspace $WS5, exec footclient ranger
+bindsym $mod+space    workspace $WS5, exec footclient lf
 bindsym $mod+Insert   workspace $WS6; exec 'systemctl --user restart spotifyd.service; footclient spt'
 
 bindsym $mod+d        exec rofi -show run
