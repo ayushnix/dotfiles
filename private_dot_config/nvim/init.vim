@@ -176,6 +176,8 @@ let g:sneak#label = 1
 
 let g:mkdp_browser = 'firefox'
 let g:mkdp_port = '8931'
+
+let g:glow_binary_path = "/usr/bin"
 " }}}
 endif
 
