@@ -48,7 +48,8 @@ case "$ext_f" in
   json) jq -C -r . "$prv_f" ;;
   pdf) pdftotext -l 5 -nopgbrk -nodiag -q "$prv_f" - ;;
   torrent) transmission-show "$prv_f" ;;
-  mkv | mp4 | webm | avi) mediainfo "$prv_f" ;;
-  jpg | png) image_info ;;
+  mkv | mp4 | webm | avi | mp3 | aac | ogg | flac | wav) mediainfo "$prv_f" ;;
+  jpg | png | webp | avif) image_info ;;
+  zip | tar | gz) bsdtar -t -f "$prv_f" ;;
   *) handle_mime ;;
 esac

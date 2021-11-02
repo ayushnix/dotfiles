@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+# This command is meant to be used with lf for bulk renaming files.
+
+_die() {
+  rm "$1"
+  exit 1
+}
+
+main() {
+  local -a marked changed
+  local renamed trimmed_dir i
+
+  # get the list of files in an array
+  mapfile -t marked < <(printf "%s\n" "$@")
+  # a temporary file is used for editing the file names received from lf
+  renamed="$(mktemp)"
+
+  # we're not looking *move* files in bulk but to rename them
+  # as a result, we'll trim the absolute path down to the basename
+  printf "%s\n" "${marked[@]##*/}" > "$renamed"
+  # however, we'll store the trimmed path for use later
+  trimmed_dir="${marked[0]%/*}"
+
+  "${EDITOR:-busybox vi}" "$renamed"
+
+  # store the edited result in another array
+  mapfile -t changed < <(cat "$renamed")
+
+  # if the number of entries aren't the same, abort
+  # again, we're not moving or deleting files, we're just renaming them in bulk
+  if [[ "${#changed[@]}" -ne "${#marked[@]}" ]]; then
+    _die "$renamed"
+  fi
+
+  for ((i = 0; i < "${#changed[@]}"; i++)); do
+    # if the name of the file is the same as it was before, skip moving it
+    if [[ "${marked[i]##*/}" -eq "${changed[i]}" ]]; then
+      continue
+    fi
+    mv -n "${marked[i]}" "$trimmed_dir/${changed[i]}"
+  done
+}
+
+main "$@"
