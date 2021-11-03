@@ -8,7 +8,7 @@ summary=""
 
 validate_file_path() {
   local file_path="$1"
-  local regex="^[[:alpha:]][[:alnum:]\/\-_]+\.md$"
+  local regex="^[[:alpha:]][[:alnum:]\/_-]+\.md$"
 
   if [[ "$file_path" =~ $regex ]]; then
     return 0
