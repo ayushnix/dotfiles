@@ -20,7 +20,7 @@ handle_mime() {
   mime_type="$(file -b --mime-type "$prv_f")"
 
   case "$mime_type" in
-    text/*) bat -p --color always "$prv_f" ;;
+    text/*) bat --paging always --color always "$prv_f" ;;
     *) printf "%s\n" "unknown" ;;
   esac
 }
