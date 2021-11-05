@@ -1,20 +1,25 @@
-#!/bin/sh
+#!/bin/bash
 
 counter=1
 
 while read -r commit_msg; do
-  if [ "$counter" -eq 1 ] && [ "${#commit_msg}" -ge 51 ]; then
+  # I guess I could use break instead of continue but I'm not sure if the first
+  # encounter of '#' should be treated as the end of commit message
+  if [[ "${commit_msg:0:1}" == "#" ]]; then
+    continue
+  fi
+  if [[ "$counter" -eq 1 && "${#commit_msg}" -gt 50 ]]; then
     printf '%s\n' "The commit message summary was ${#commit_msg} characters long." >&2
     printf '%s\n' "Please modify it to make it less than or equal to 50 characters" >&2
     exit 1
-  elif [ "$counter" -eq 2 ] && [ -n "${commit_msg}" ]; then
+  elif [[ "$counter" -eq 2 && -n "${commit_msg}" ]]; then
     printf '%s\n' "The second line of the commit message should be empty." >&2
     exit 1
-  elif [ "$counter" -ge 3 ] && [ "${#commit_msg}" -ge 73 ]; then
+  elif [[ "$counter" -gt 2 && "${#commit_msg}" -gt 72 ]]; then
     printf '%s\n' "The commit message details at line number $counter was ${#commit_msg} characters long." >&2
     printf '%s\n' "Please modify it to make it less than or equal to 72 characters" >&2
     exit 1
   fi
-  : $((counter = counter + 1))
+  ((counter = counter + 1))
 done < "$1"
 unset -v counter
