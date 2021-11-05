@@ -1,0 +1,6 @@
+[Unit]
+Description=notify if files are present in syncthing folder
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/monitor-dir {{ .syncthing_dir }}

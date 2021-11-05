@@ -1,0 +1,64 @@
+#!/bin/bash
+#
+# A script to notify a user if files are present in a folder synchronized with
+# Syncthing.
+#
+# Yes, I know I could've just used `find "$1" -type f | wc -l` in find_files
+# but I wanted to write this in pure bash and to keep this script free of any
+# dependencies besides notify-send (and, obviously, bash).
+
+if ! command -v notify-send > /dev/null 2>&1; then
+  printf "%s\n" "Please install notify-send" >&2
+  exit 1
+fi
+
+_die() {
+  printf "%s\n" "$1" >&2
+  exit 1
+}
+
+find_files() {
+  local -a temp_files
+  local folder_name count=0 i
+
+  if ! [[ -d "$1" ]]; then
+    _die "Please enter a valid directory path"
+  fi
+
+  # get the list of all directories, sub-directories, and files
+  shopt -s nullglob dotglob globstar
+  temp_files=("${1%/}"/**)
+  shopt -u nullglob dotglob globstar
+
+  # count the number of files present in the array
+  for ((i = 0; i < "${#temp_files[@]}"; i++)); do
+    if [[ -f "${temp_files[i]}" ]]; then
+      ((count = count + 1))
+    fi
+  done
+
+  # get the basename of the folder passed by the user
+  folder_name="${1%/}"
+  folder_name="${folder_name##*/}"
+  if [[ "$count" -ne 0 ]]; then
+    notify-send "The folder '$folder_name' has $count files"
+  else
+    printf "%s\n" "No files found"
+    exit 0
+  fi
+}
+
+main() {
+  local i
+
+  if [[ "$#" -gt 0 ]]; then
+    while [[ "$#" -gt 0 ]]; do
+      find_files "$1"
+      shift
+    done
+  else
+    _die "Please enter a valid directory path" >&2
+  fi
+}
+
+main "$@"

@@ -1,0 +1,13 @@
+[Unit]
+Description=notify if files are present in syncthing folder
+DefaultDependencies=no
+Conflicts=shutdown.target
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=graphical-session.target
