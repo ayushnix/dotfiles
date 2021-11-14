@@ -35,15 +35,6 @@ end
 #: }}}
 
 #: OTHER USER DEFINED ALIASES AND FUNCTIONS {{{
-function ytdwl -d 'embed metadata in youtube-dl videos'
-    youtube-dl --add-metadata --embed-subs --all-subs --ignore-errors $argv
-end
-
-function ytdwl-aria -d 'embed metadata in youtube-dl videos and download using aria2'
-   youtube-dl --add-metadata --embed-subs --all-subs --external-downloader=aria2c \
-   --external-downloader-args="--conf-path=$XDG_CONFIG_HOME/aria2/aria2.conf" $argv
-end
-
 function dice -d 'use diceware to generate 6 word passphrases'
     xkcdpass -c 10
 end
@@ -149,12 +140,12 @@ if status --is-interactive
 #: GIT {{{
     abbr -a -g -- gits 'git status'
     abbr -a -g -- gita 'git add'
-    abbr -a -g -- gitc 'git commit'
     abbr -a -g -- gitd 'git diff'
     abbr -a -g -- gitl 'git log --decorate --graph --all --oneline'
+    abbr -a -g -- gitcm 'git commit'
     abbr -a -g -- gitpl 'git pull'
     abbr -a -g -- gitps 'git push'
-    abbr -a -g -- gitr 'git rebase'
+    abbr -a -g -- gitrb 'git rebase'
     abbr -a -g -- gitsw 'git switch'
     abbr -a -g -- gitcl 'git clone'
 #: }}}

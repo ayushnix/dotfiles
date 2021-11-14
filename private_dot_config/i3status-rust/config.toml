@@ -2,6 +2,18 @@
 name = "native"
 [icons]
 name = "awesome5"
+[icons.overrides]
+thermometer-full = "\uf2c7"
+thermometer-empty = "\uf2cb"
+
+[[block]]
+block = "toggle"
+text = "GAMMA"
+command_state = "systemctl --user show --property=ActiveState wlsunset | grep '=active'"
+command_on = "systemctl --user start wlsunset"
+command_off = "systemctl --user stop wlsunset"
+icon_on = "thermometer-full"
+icon_off = "thermometer-empty"
 
 [[block]]
 block = "time"
