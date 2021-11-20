@@ -1,164 +1,176 @@
 # config.fish
 
-#: BASIC ALIASES {{{
-function ip -d 'use ip with colors'
-    command ip -c $argv
+#: ALIAS {{{
+
+function vi -d 'use busybox vi'
+  busybox vi $argv
 end
 
-function ipb -d 'show brief output of ip addr'
-    command ip -c -br -4 a
+# busybox cat performs a bit better than gnu cat when using fish+tmux
+function cat -d 'use busybox cat'
+  busybox cat $argv
 end
 
-function vim -d 'use neovim instead of vim'
-    nvim $argv
+function ip -w ip -d 'use ip with colors'
+  command ip -c $argv
 end
 
-function df -d 'show human readable numbers when using df'
-    command df -h $argv
+function ipb -w ip -d 'show brief output of ip addr'
+  ip -c -br -4 a $argv
 end
 
-function clip -d 'copy data to clipboard'
-    wl-copy $argv
+function vim -w nvim -d 'use neovim instead of vim'
+  nvim $argv
 end
 
-function less -d 'preserve colors of stdin'
-    command less -R $argv
+function df -d 'show human readable numbers'
+  command df -hT $argv
 end
 
-function ll -d 'list files and directors'
-    exa -lag --group-directories-first $argv
+function clip -w wl-copy -d 'copy data to clipboard'
+  wl-copy $argv
 end
 
-function cat -d 'show the output of files and work as a pager'
-    command bat $argv
+function less -w less -d 'preserve colors of stdin'
+  command less -R $argv
 end
+
+function ll -w exa -d 'list files and directors'
+  exa -lag --group-directories-first $argv
+end
+
+function dice -w xkcdpass -d 'use diceware to generate 6 word passphrases'
+  xkcdpass -c 10 $argv
+end
+
 #: }}}
 
-#: OTHER USER DEFINED ALIASES AND FUNCTIONS {{{
-function dice -d 'use diceware to generate 6 word passphrases'
-    xkcdpass -c 10
-end
+#: FUNCTIONS {{{
 
 function confirm -d 'confirm before execution'
-    while true
-        read -p 'echo "Confirm (Yy/Nn):"' -l conf
-        switch $conf
-          case Y y
-            $argv
-            return 0
-          case N n
-            return 1
-        end
+  while true
+    read -p 'echo "Confirm (Yy/Nn):"' -l conf
+    switch $conf
+      case Y y
+        $argv
+        return 0
+      case N n
+        return 1
     end
+  end
 end
 
-# delete fish history containing use of password-store
-function delete-pass -e fish_postexec
-    set -l found_items
-    builtin history search --prefix --null -- "pass " | while read -lz x
-        set found_items $found_items $x
-    end
-    for i in $found_items
-        builtin history delete --exact --case-sensitive -- $i
-    end
+function man -w man -d 'colorized man pages'
+  # bold
+  set -x LESS_TERMCAP_md (set_color --bold red)
+  set -x LESS_TERMCAP_me (set_color normal)
+  # underline
+  set -x LESS_TERMCAP_us (set_color --underline green)
+  set -x LESS_TERMCAP_ue (set_color normal)
+
+  command man $argv
 end
+
 #: }}}
 
-#: PACMAN ALIASES AND FUNCTIONS {{{
+#: PACMAN {{{
+
 function pupg -d 'upgrade packages'
-    printf '%s\n' '--------------------------'
-    printf '%s\n' 'starting pacman update ...'
-    printf '%s\n' '--------------------------'
-    doas pacman -Syu $argv
+  printf '%s\n' '--------------------------'
+  printf '%s\n' 'starting pacman update ...'
+  printf '%s\n' '--------------------------'
+  doas pacman -Syu $argv
 
-    if command -q aur
-      printf '%s\n' '------------------------'
-      printf '%s\n' 'checking aur updates ...'
-      printf '%s\n' '------------------------'
-      aur repo -l | aur vercmp
-    end
+  if command -q aur
+    printf '%s\n' '------------------------'
+    printf '%s\n' 'checking aur updates ...'
+    printf '%s\n' '------------------------'
+    aur repo -l | aur vercmp
+  end
 end
 
-function pins -d '(re)install a package'
-    doas pacman -S $argv
+function pins -w pacman -d '(re)install a package'
+  doas pacman -S $argv
 end
 
-function prem -d 'remove a package'
-    doas pacman -Rns $argv
+function prem -w pacman -d 'remove a package'
+  doas pacman -Rns $argv
 end
 
 function psea -d 'search for a package using pacman or aur (-a/--aur)'
-    argparse 'a/aur' -- $argv
-    or return
+  argparse 'a/aur' -- $argv
+  or return
 
-    if set -q _flag_aur
-        aur search -k NumVotes $argv
-        return 0
-    else
-        pacman -Ss $argv
-    end
+  if set -q _flag_aur
+    aur search -k NumVotes $argv
+    return 0
+  else
+    pacman -Ss $argv
+  end
 end
 
-function pinf -d 'view information of a package'
-    pacman -Qi $argv 2> /dev/null; or pacman -Si $argv
+function pinf -w pacman -d 'view information of a package'
+  pacman -Qi $argv 2> /dev/null; or pacman -Si $argv
 end
 
-function filepkg -d 'check which package a binary belongs to'
-    pacman -Qo $argv
+function filepkg -w pacman -d 'check which package a binary belongs to'
+  pacman -Qo $argv
 end
 
-function mkpg -d 'build and install an AUR package'
-    aur build -s --clean $argv
+function mkpg -w aur -d 'build and install an AUR package'
+  aur build -s --clean $argv
 end
 
 function pacpre -d 'use fzf to preview information of pacman packages'
-    pacman -Qq | fzf --preview 'pacman -Qil {}' --layout=reverse --bind 'enter:execute(pacman -Qil {} | less)'
+  pacman -Qq | fzf --preview 'pacman -Qil {}' --layout=reverse --bind 'enter:execute(pacman -Qil {} | less)'
 end
+
 #: }}}
 
-#: SYSTEMD ALIASES {{{
+#: SYSTEMD {{{
+
 function pw -d 'power off the machine'
-    confirm systemctl poweroff
+  confirm systemctl poweroff
 end
 
 function sl -d 'suspend the machine'
-    confirm systemctl suspend
+  confirm systemctl suspend
 end
 
 function re -d 'reboot the machine'
-    confirm systemctl reboot
+  confirm systemctl reboot
 end
 
 function errlogs -d 'show the errors in logs since boot'
-   journalctl -b -p 0..3 $argv
-   systemctl --failed
+  journalctl -b -p 0..3 $argv
+  systemctl --failed
 end
+
 #: }}}
 
-#: FISH ABBREVIATIONS {{{
+#: ABBREVIATIONS {{{
+
 if status --is-interactive
-#: GIT {{{
-    abbr -a -g -- gits 'git status'
-    abbr -a -g -- gita 'git add'
-    abbr -a -g -- gitd 'git diff'
-    abbr -a -g -- gitl 'git log --decorate --graph --all --oneline'
-    abbr -a -g -- gitcm 'git commit'
-    abbr -a -g -- gitpl 'git pull'
-    abbr -a -g -- gitps 'git push'
-    abbr -a -g -- gitrb 'git rebase'
-    abbr -a -g -- gitsw 'git switch'
-    abbr -a -g -- gitcl 'git clone'
-#: }}}
-#: SYSTEMD {{{
-    abbr -a -g -- dsysre 'doas systemctl restart'
-    abbr -a -g -- sysst 'systemctl status'
-#: }}}
+  # GIT
+  abbr -a -g -- gits 'git status'
+  abbr -a -g -- gita 'git add'
+  abbr -a -g -- gitd 'git diff'
+  abbr -a -g -- gitl 'git log --decorate --graph --all --oneline'
+  abbr -a -g -- gitcm 'git commit'
+  abbr -a -g -- gitpl 'git pull'
+  abbr -a -g -- gitps 'git push'
+  abbr -a -g -- gitrb 'git rebase'
+  abbr -a -g -- gitsw 'git switch'
+  abbr -a -g -- gitsh 'git show'
+  abbr -a -g -- gitcl 'git clone'
+  # DOAS
+  abbr -a -g -- doasedit 'doas busybox vi'
 end
+
 #: }}}
 
+# some terminals don't consider ctrl+enter to be the same as enter
 bind \c\[27\;5\;13~ 'execute'
 bind \e\[27\;5\;13~ 'execute'
 
-starship init fish | source
-
-# vim:fileencoding=utf-8:foldmethod=marker
+# vim:foldmethod=marker
