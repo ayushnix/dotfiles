@@ -18,5 +18,5 @@ set $base0F #BE5046
 set $base0G #1C1E24
 
 # class                     border  bg      text    indicator child_border
-client.focused              $base00 $base00 $base0D $base04   $base04
+client.focused              $base00 $base00 $base0D $base04   $base0D
 client.unfocused            $base00 $base0G $base04 $base00   $base00

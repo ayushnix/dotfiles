@@ -18,7 +18,6 @@ You'll find config files for
 - [fish](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/private_fish/config.fish)
 - [foot](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/foot/foot.ini)
 - [tmux](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/tmux/tmux.conf)
-- [starship](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/starship.toml)
 - [i3status-rust](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/i3status-rust/config.toml)
 - [firefox user.js](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/firefox/master/user.js)
 - [firefox userChrome.css](https://github.com/ayushnix/dotfiles/blob/master/private_dot_config/firefox/master/chrome/userChrome.css)

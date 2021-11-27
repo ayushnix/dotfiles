@@ -7,15 +7,6 @@ thermometer-full = "\uf2c7"
 thermometer-empty = "\uf2cb"
 
 [[block]]
-block = "toggle"
-text = "GAMMA"
-command_state = "systemctl --user show --property=ActiveState wlsunset | grep '=active'"
-command_on = "systemctl --user start wlsunset"
-command_off = "systemctl --user stop wlsunset"
-icon_on = "thermometer-full"
-icon_off = "thermometer-empty"
-
-[[block]]
 block = "time"
 format = "%I:%M %p %a %d %b %Y"
 interval = 15
@@ -43,10 +34,6 @@ block = "cpu"
 interval = 5
 format = "{utilization}"
 
-#[[block]]
-#block = "backlight"
-#root_scaling = 1.4
-
 [[block]]
 block = "battery"
 device = "BAT0"
@@ -55,3 +42,12 @@ interval = 30
 [block.theme_overrides]
 warning_fg = "#E06C75"
 critical_fg = "#BE5046"
+
+[[block]]
+block = "toggle"
+text = "GAMMA"
+command_state = "systemctl --user show --property=ActiveState wlsunset | grep '=active'"
+command_on = "systemctl --user start wlsunset"
+command_off = "systemctl --user stop wlsunset"
+icon_on = "thermometer-full"
+icon_off = "thermometer-empty"

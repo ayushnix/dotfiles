@@ -30,7 +30,7 @@
     colorMoved = default
 
 [pager]
-    diff = delta
+    diff = delta -s
     log = delta
     reflog = delta
     show = delta
@@ -45,7 +45,7 @@
     hunk-header-style = omit
     navigate = true
     line-numbers = true
-    side-by-side = false
+    side-by-side = true
 
 [delta "decorations"]
     commit-decoration-style = bold yellow box ul

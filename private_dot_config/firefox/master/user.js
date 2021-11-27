@@ -131,11 +131,7 @@ user_pref("identity.fxaccounts.enabled", false);
 
 /* MY ADDITIONS */
 user_pref("ui.context_menus.after_mouseup", true);
-
-user_pref("gfx.webrender.all", true);
-
-// decreased responsiveness the last time I tried it
-// user_pref("gfx.webrender.compositor.force-enabled", true);
+user_pref("fission.autostart", true);
 
 // not sure about the security or privacy implications of this but
 // a lot of FFX CSS themes and addons apparently require this

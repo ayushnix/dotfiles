@@ -6,7 +6,7 @@ After=swaywm.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/wlsunset -l 19 -L 73
+ExecStart=/usr/bin/wlsunset -l 19 -L 73 -T 5500
 
 [Install]
 WantedBy=swaywm.target

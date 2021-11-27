@@ -1,0 +1,12 @@
+[Default Applications]
+text/plain=nvim.desktop
+text/html=firefox.desktop
+x-scheme-handler/http=firefox.desktop
+x-scheme-handler/https=firefox.desktop
+x-scheme-handler/about=firefox.desktop
+x-scheme-handler/unknown=firefox.desktop
+application/pdf=org.pwmt.zathura.desktop
+application/epub+zip=org.pwmt.zathura.desktop
+application/x-mobipocket-ebook=org.pwmt.zathura.desktop
+image/png=imv.desktop
+image/jpeg=imv.desktop

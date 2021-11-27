@@ -16,13 +16,13 @@ set previewer ~/.local/bin/prv
 # CUSTOM COMMANDS {{{
 
 # copy the absolute path of a file
-cmd copy-path $wl-copy -n $fx
+cmd copy-path $wl-copy -n $f
 
 # copy the basename of a file
-cmd copy-name $basename -a -- $fx | wl-copy -n
+cmd copy-name $basename -a -- $f | wl-copy -n
 
 # open with a specific program
-cmd open-with %"$@" $fx
+cmd open-with &"$@" > /dev/null 2>&1 $fx
 
 cmd mkdir ${{
     IFS=" "
@@ -80,6 +80,9 @@ cmd link %{{
 # MAPPINGS {{{
 # x, b are still unbound
 
+map <c-l>
+map <c-l> load
+
 map t trash
 map D delete
 map P link
@@ -88,6 +91,11 @@ map i !~/.local/bin/prv $f
 
 map ap copy-path
 map an copy-name
+map am push :mkdir<space>
+map at push :touch<space>
+map ac push :chmod<space>
+
+map br bulkrename
 
 # }}}
 

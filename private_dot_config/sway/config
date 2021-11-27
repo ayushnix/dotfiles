@@ -49,7 +49,7 @@ set $WS3 "3:"
 set $WS4 "4:"
 set $WS5 "5:"
 set $WS6 "6:"
-set $WS7 "7:"
+set $WS7 "7:"
 set $WS8 "8:"
 
 # switch to workspace
@@ -111,6 +111,11 @@ seat seat0 {
 set $laptop eDP-1
 set $monitor DP-2
 
+# don't enable fractional scaling, even if pop menus start working fine
+# there's a subtle loss of text quality and somewhat noticeable latency is
+# introduced in the session
+# I could've maybe lived with the former issue but I can't tolerate
+# unnecessarily high latency in my window manager and terminal
 output $laptop {
     pos 0 0 res 1920x1080
     subpixel rgb
@@ -203,7 +208,8 @@ bar {
 #: APPLICATION WINDOW PROPERTIES {{{
 
 # assignments
-for_window [app_id="firefox"]                     move container to workspace $WS4
+for_window [app_id="org.pwmt.zathura"]            move container to workspace $WS3
+for_window [app_id="^firefox.*"]                  move container to workspace $WS4
 for_window [app_id="chromium"]                    move container to workspace $WS4
 for_window [app_id="mpv"]                         move container to workspace $WS6
 for_window [app_id="kvantummanager"]              move container to workspace $WS8
@@ -215,12 +221,13 @@ for_window [app_id="org.qbittorrent.qBittorrent"] move container to workspace $W
 for_window [class="mpv"] fullscreen enable
 
 # float
-for_window [app_id="gnome-tweaks"]                                      focus, floating enable
-for_window [app_id="firefox" title="^Firefox - Choose User Profile$"]   focus, floating enable
-for_window [app_id="firefox" title="^Library$"]                         focus, floating enable
-for_window [app_id="firefox" title="^About Mozilla Firefox$"]           focus, floating enable
-for_window [app_id="kvantummanager"]                                    focus, floating enable
-for_window [app_id="qt5ct"]                                             focus, floating enable
+for_window [app_id="^firefox.*" title="(?i)^firefox.*- choose user profile$"]   focus, floating enable
+for_window [app_id="^firefox.*" title="^Library$"]                              focus, floating enable
+for_window [app_id="^firefox.*" title="^About Mozilla Firefox$"]                focus, floating enable
+for_window [app_id="^firefox.*" title="You’ve launched an older version of Firefox"] focus, floating enable
+for_window [app_id="kvantummanager"]                                            focus, floating enable
+for_window [app_id="qt5ct"]                                                     focus, floating enable
+for_window [app_id="qbittorrent" title="Open Torrent Files"]                    focus, floating enable
 
 #: }}}
 
@@ -231,8 +238,8 @@ bindsym $mod+End      workspace $WS4, exec firefox --new-instance --ProfileManag
 bindsym $mod+space    workspace $WS5, exec footclient lf
 bindsym $mod+Insert   workspace $WS6; exec 'systemctl --user restart spotifyd.service; footclient spt'
 
-bindsym $mod+d        exec rofi -show run
-bindsym $mod+z        exec tessen -b rofi
+bindsym $mod+d        exec bemenu-run
+bindsym $mod+z        exec env TESSEN_DELAY=100 tessen -b bemenu
 bindsym $mod+s        exec 'grim -g "$(slurp)" - | swappy -f -'
 bindsym $mod+c        exec rofi -show calc -modi calc -no-show-match -no-sort -no-history -no-fixed-num-lines -lines 0
 bindsym $mod+m        exec scrlck
