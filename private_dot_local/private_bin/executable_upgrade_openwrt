@@ -1,0 +1,174 @@
+#!/bin/sh
+# SPDX-License-Identifier: ISC
+#
+# Copyright (c) 2021 Ayush Agarwal
+#
+# Permission to use, copy, modify, and /or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+# REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+# AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+# INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+# LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+# OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+# PERFORMANCE OF THIS SOFTWARE.
+#
+# -----------------------------------------------------------------------------
+#
+# disable warning about use of `local` because busybox ash, used in OpenWRT,
+# supports it
+# shellcheck disable=SC3043
+#
+# -----------------------------------------------------------------------------
+#
+# I got tired of OpenWRT sysupgrades being painful. Let's automate it and make
+# it secure as well.
+
+# initialize global variables with default values
+url_release="21.02.1"
+url_arch="ramips"
+url_device="mt7621"
+url_name="dlink_dir-2640-a1"
+upgrade_url=""
+sha256_url=""
+sign_url=""
+
+download_files() {
+  if [ "$dwn_dir" = "error" ]; then
+    _die "unable to create a temporary directory, exiting!"
+  fi
+
+  printf "%s\n" "[#] Downloading sysupgrade files in $dwn_dir ..."
+  wget -q -P "$dwn_dir" -T 15 "$upgrade_url" \
+    || _die "unable to download the sysupgrade image, exiting!"
+  wget -q -P "$dwn_dir" -T 15 "$sha256_url" \
+    || _die "unable to download the sha256 checksum file, exiting!"
+  wget -q -P "$dwn_dir" -T 15 "$sign_url" \
+    || _die "unable to download the usign signature file, exiting!"
+}
+
+check_files() {
+  printf "%s\n" "[#] Checking if sysupgrade files are available ..."
+  wget -qs "$upgrade_url" || _die "sysupgrade file not found, exiting!"
+  wget -qs "$sha256_url" || _die "sha256 file not found, exiting!"
+  wget -qs "$sign_url" || _die "usign file not found, exiting!"
+}
+
+verify_files() {
+  local chk_val real_val
+
+  chk_val="$(grep "$url_name.*sysupgrade" "$dwn_dir"/sha256sums)"
+  chk_val="${chk_val% *}"
+  real_val="$(sha256sum "$dwn_dir/openwrt-$url_release-$url_arch-$url_device-$url_name-squashfs-sysupgrade.bin" 2> /dev/null)"
+  real_val="${real_val% *}"
+
+  if [ "$chk_val" != "$real_val" ]; then
+    _die "failed to match SHA256 checksum, exiting!"
+  else
+    printf "%s\n" "[#] SHA256 checksum verification finished successfully"
+  fi
+
+  if ! usign -q -V -m "$dwn_dir"/sha256sums -P /etc/opkg/keys; then
+    _die "USIGN verification failed, exiting!"
+  else
+    printf "%s\n" "[#] USIGN signature verification finished successfully"
+  fi
+}
+
+bckp_user_pkgs() {
+  local kernel_time pkg_time pkg_list pkg install_reason backup_file
+  pkg_list="$(mktemp -q)"
+  backup_file="/etc/config/opkg.installed"
+
+  kernel_time="$(opkg status kernel | grep 'Installed-Time')"
+  kernel_time="${kernel_time#*: }"
+
+  opkg list-installed | cut -d ' ' -f 1 > "$pkg_list"
+
+  printf "%s" "" > "$backup_file"
+  while read -r pkg; do
+    pkg_time="$(opkg status "$pkg" | grep 'Installed-Time')"
+    pkg_time="${pkg_time#*: }"
+    if [ "$pkg_time" = "$kernel_time" ]; then
+      continue
+    fi
+    install_reason="$(opkg status "$pkg" | grep '^Status.*user installed$')"
+    if [ -n "$install_reason" ]; then
+      printf "%s\n" "$pkg" >> "$backup_file"
+    fi
+  done < "$pkg_list"
+  rm -f "$pkg_list"
+  printf "%s\n" "[#] The list of user installed packages have been backed up in"
+  printf "%s\n" "    $backup_file"
+}
+
+# TODO during the next sysupgrade
+# https://openwrt.org/docs/guide-user/installation/sysupgrade.cli
+# https://openwrt.org/docs/guide-user/installation/generic.sysupgrade
+upgrade_openwrt() {
+  :
+}
+
+is_installed() {
+  if ! command -v "$1" > /dev/null 2>&1; then
+    _die "$1 is not installed, exiting!"
+  fi
+}
+
+_die() {
+  if [ -n "$1" ]; then
+    printf "%s\n" "[X] $1" >&2
+  fi
+  exit 1
+}
+
+# TODO: after the script is finished
+help_menu() {
+  printf "%s\n" "TODO: help menu"
+}
+
+main() {
+  local opt dwn_dir
+
+  is_installed usign
+  is_installed mktemp
+  is_installed sha256sum
+  is_installed wget
+
+  OPTIND=1
+  while getopts ":r:a:d:n:bh" opt; do
+    case "$opt" in
+      r) url_release="$OPTARG" ;;
+      a) url_arch="$OPTARG" ;;
+      d) url_device="$OPTARG" ;;
+      n) url_name="$OPTARG" ;;
+      b)
+        bckp_user_pkgs
+        exit 0
+        ;;
+      h)
+        help_menu
+        exit 0
+        ;;
+      \?) _die "Invalid Option! - $OPTARG" ;;
+      :) _die "-$OPTARG needs an argument" ;;
+    esac
+  done
+  shift "$((OPTIND - 1))"
+
+  dwn_dir="$(mktemp -qd || printf "%s\n" "error")"
+  upgrade_url="https://downloads.openwrt.org/releases/$url_release/targets/$url_arch/$url_device/openwrt-$url_release-$url_arch-$url_device-$url_name-squashfs-sysupgrade.bin"
+  sha256_url="https://downloads.openwrt.org/releases/$url_release/targets/$url_arch/$url_device/sha256sums"
+  sign_url="https://downloads.openwrt.org/releases/$url_release/targets/$url_arch/$url_device/sha256sums.sig"
+
+  printf "%s\n" "[#] The following file will be downloaded and verified"
+  printf "%s\n" "    openwrt-$url_release-$url_arch-$url_device-$url_name-squashfs-sysupgrade.bin"
+
+  check_files
+  download_files
+  verify_files
+}
+
+main "$@"
