@@ -1,0 +1,176 @@
+#!/bin/bash
+#
+# This script has been borrowed and adapted from
+# https://git.sr.ht/~alexdavid/dotfiles/tree/master/item/jail/init
+# https://github.com/darrenldl/sandboxing/blob/master/scripts/chromium.sh
+#
+# The best part about Flatpak, for me, is application sandboxing. However, I
+# don't like using it for anything besides proprietary software like Steam
+# which needs a mess of 32-bit libraries.
+#
+# This is my attempt to take the best part of Flatpak, which is bubblewrap, and
+# use it with pacman on Arch Linux. This is obviously not as beginner-friendly
+# as Flatpak is but I personally find this to be a better solution than the
+# package maintainer obsolescence and dependence on Red Hat/GNOME/GTK/package
+# developers that Flatpak will create in the years to come.
+#
+# _read_only      - add a directory with read-only permissions
+# _read_write     - add a directory with read-write permissions
+# _read_only_all  - add multiple directories with read-only permissions
+# _read_write_all - add multiple directories with read-write permissions
+# _env            - add an environment variable
+# _append_path    - add a directory to $PATH
+# _network        - add internet access
+# _gui            - add GUI capabilities
+# _gpu            - add access to the GPU
+# _dbus           - add access to DBUS
+# _audio          - add audio capabilities
+# _daemon         - run the application as a daemon
+# _camera         - add access to the camera
+
+# declare global variables
+executable=$(basename "$0")
+argv=("$@")
+bwrap_path="/usr/bin"
+die_with_parent=1
+bwrap_home="/home/sandbox"
+if ! [[ -d "$HOME/.sandbox/$executable" ]]; then
+  mkdir -p "$HOME/.sandbox/$executable" || _die "unable to create a HOME folder for $executable"
+fi
+# the list of default permissions
+bwrap_args=(
+  --ro-bind /usr/share /usr/share
+  --ro-bind /usr/lib /usr/lib
+  --symlink /usr/lib /lib
+  --ro-bind /usr/lib32 /usr/lib32
+  --ro-bind /usr/lib64 /usr/lib64
+  --symlink /usr/lib64 /lib64
+  --tmpfs /usr/lib/modules
+  --tmpfs /usr/lib/systemd
+  --ro-bind /usr/bin /usr/bin
+  --symlink /usr/bin /sbin
+  --symlink /usr/bin /bin
+  --dev /dev
+  --proc /proc
+  --tmpfs /tmp
+  --tmpfs /run
+  --clearenv
+  --setenv "HOME" "$bwrap_home"
+  --setenv "SHELL" "/usr/bin/nologin"
+  --setenv "USER" "sandbox"
+  --hostname "jail"
+  --bind "$HOME/.sandbox/$executable" "$bwrap_home"
+  --setenv "XDG_RUNTIME_DIR" "$XDG_RUNTIME_DIR"
+  --dir "$XDG_RUNTIME_DIR"
+  --unshare-all
+  --new-session
+)
+
+# the final functions which run the program
+finalize_args() {
+  bwrap_args+=(--setenv PATH "$bwrap_path")
+  if [[ $die_with_parent -eq 1 ]]; then
+    bwrap_args+=(--die-with-parent)
+  fi
+}
+
+run_jail() {
+  finalize_args
+  exec bwrap "${bwrap_args[@]}" -- "$executable" "${argv[@]}"
+}
+
+run_jail_raw() {
+  finalize_args
+  exec bwrap "${bwrap_args[@]}" "$@"
+}
+
+# functions which add needed permissions
+_read_only() {
+  bwrap_args+=(--ro-bind "$1" "$1")
+}
+
+_read_write() {
+  bwrap_args+=(--bind "$1" "$1")
+}
+
+_read_only_all() {
+  local maybe_path
+
+  for maybe_path in "$@"; do
+    if [[ -e "$maybe_path" ]]; then
+      _read_only "$(realpath "$maybe_path")"
+    fi
+  done
+}
+
+_read_write_all() {
+  local maybe_path
+
+  for maybe_path in "$@"; do
+    if [[ -e "$maybe_path" ]]; then
+      _read_write "$(realpath "$maybe_path")"
+    fi
+  done
+}
+
+_env() {
+  bwrap_args+=(--setenv "$1" "$2")
+}
+
+_append_path() {
+  bwrap_path+=":$1"
+}
+
+_network() {
+  bwrap_args+=(--share-net)
+  _read_only_all /etc/ssl /etc/hosts /etc/ca-certificates /etc/resolv.conf /etc/nsswitch.conf
+}
+
+_gui() {
+  bwrap_args+=(
+    --ro-bind "$XDG_CONFIG_HOME/fontconfig" "$bwrap_home/.config/fontconfig"
+    --ro-bind "$XDG_CONFIG_HOME/dconf" "$bwrap_home/.config/dconf"
+    --ro-bind "$XDG_CONFIG_HOME/gtk-3.0" "$bwrap_home/.config/gtk-3.0"
+    # this dir belongs in /dev/null but we'll add it nonetheless
+    --ro-bind "$XDG_CONFIG_HOME/gtk-4.0" "$bwrap_home/.config/gtk-4.0"
+    --ro-bind "$XDG_CONFIG_HOME/qt5ct" "$bwrap_home/.config/qt5ct"
+    --ro-bind "$XDG_CONFIG_HOME/Kvantum" "$bwrap_home/.config/Kvantum"
+    --dev-bind /dev/shm /dev/shm
+  )
+  _read_only_all "/etc/fonts" "$XDG_RUNTIME_DIR"/wayland-*
+  _env "XDG_SESSION_TYPE" "$XDG_SESSION_TYPE"
+  _env "XDG_CURRENT_DESKTOP" "$XDG_CURRENT_DESKTOP"
+  _env "WAYLAND_DISPLAY" "$WAYLAND_DISPLAY"
+}
+
+_gpu() {
+  bwrap_args+=(
+    --dev-bind /dev/dri /dev/dri
+    --ro-bind /sys /sys
+  )
+}
+
+_audio() {
+  _read_only_all "$XDG_RUNTIME_DIR/pulse" "$XDG_RUNTIME_DIR"/pipewire-*
+}
+
+_dbus() {
+  _read_only_all "$XDG_RUNTIME_DIR/bus" "$XDG_RUNTIME_DIR"/dbus-*
+}
+
+_daemon() {
+  die_with_parent=0
+}
+
+_camera() {
+  if [[ -e /dev/video0 ]]; then
+    bwrap_args+=(--dev-bind /dev/video0 /dev/video0)
+  fi
+}
+
+_die() {
+  if [[ -n "$1" ]]; then
+    printf "%s\n" "[X] $1" >&2
+  fi
+  exit 1
+}

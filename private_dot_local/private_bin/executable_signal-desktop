@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# shellcheck source=./bwrap_init
+. ~/.local/bin/bwrap_init --enable-features=UseOzonePlatform --ozone-platform=wayland
+
+_gui
+_network
+_gpu
+_dbus
+_audio
+
+run_jail
