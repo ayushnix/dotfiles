@@ -1,0 +1,6 @@
+[Unit]
+Description=delete password store history
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/delete-pass-history

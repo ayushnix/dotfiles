@@ -1,0 +1,16 @@
+#!/bin/fish
+#
+# This script will delete all instances of 'pass ...' from the history
+#
+# This script was being used a function and was executed after every
+# 'fish_postexec' but I didn't want any potential overhead so I removed it from
+# config.fish
+
+set -l i
+set -l found_items
+builtin history search --prefix --null -- "pass " | while read -lz x
+  set -a found_items $x
+end
+for i in $found_items
+  builtin history delete --exact --case-sensitive -- $i
+end

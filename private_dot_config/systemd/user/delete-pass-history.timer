@@ -1,0 +1,9 @@
+[Unit]
+Description=delete password store history
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target
