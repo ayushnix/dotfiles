@@ -8,7 +8,7 @@ if [ "$#" -eq 0 ]; then
   exit 1
 fi
 
-aur repo --path-list | while read -r repo_path; do
+aur repo --list-path | while read -r repo_path; do
   repo-remove "$repo_path" "$@"
   paccache -c "${repo_path%/*}" -rvk0 "$@"
 done
