@@ -11,8 +11,8 @@
 # This is my attempt to take the best part of Flatpak, which is bubblewrap, and
 # use it with pacman on Arch Linux. This is obviously not as beginner-friendly
 # as Flatpak is but I personally find this to be a better solution than the
-# package maintainer obsolescence and dependence on Red Hat/GNOME/GTK/package
-# developers that Flatpak will create in the years to come.
+# package maintainer obsolescence that Flatpak will create in the years to
+# come.
 #
 # _read_only      - add a directory with read-only permissions
 # _read_write     - add a directory with read-write permissions
@@ -37,6 +37,7 @@ bwrap_home="/home/sandbox"
 if ! [[ -d "$HOME/.sandbox/$executable" ]]; then
   mkdir -p "$HOME/.sandbox/$executable" || _die "unable to create a HOME folder for $executable"
 fi
+
 # the list of default permissions
 bwrap_args=(
   --ro-bind /usr/share /usr/share
@@ -111,6 +112,14 @@ _read_write_all() {
       _read_write "$(realpath "$maybe_path")"
     fi
   done
+}
+
+_read_only_diff() {
+  bwrap_args+=(--ro-bind "$1" "$2")
+}
+
+_read_write_diff() {
+  bwrap_args+=(--bind "$1" "$2")
 }
 
 _env() {

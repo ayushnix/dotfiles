@@ -3,6 +3,7 @@
 # shellcheck source=./bwrap_init
 . ~/.local/bin/bwrap_init --enable-features=UseOzonePlatform --ozone-platform=wayland
 
+_read_only /data/downloads
 _gui
 _network
 _gpu
