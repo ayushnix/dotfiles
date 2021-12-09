@@ -40,6 +40,12 @@ cmd chmod ${{
     lf -remote "send $id reload"
 }}
 
+cmd chmod_exec ${{
+    chmod 750 $fx
+    lf -remote "send $id unselect"
+    lf -remote "send $id reload"
+}}
+
 cmd bulkrename ${{
     ~/.local/bin/bulkr $fx
     lf -remote "send $id unselect"
@@ -94,6 +100,7 @@ map an copy-name
 map am push :mkdir<space>
 map at push :touch<space>
 map ac push :chmod<space>
+map ax chmod_exec
 
 map br bulkrename
 
