@@ -24,7 +24,7 @@ export XDG_STATE_HOME="$HOME/.local/state"
 
 # user specific environment variables
 export EDITOR=nvim
-export LESS="-i"
+export LESS="-iFXR"
 export LESSSECURE=1
 export LIBVA_DRIVER_NAME=radeonsi
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
