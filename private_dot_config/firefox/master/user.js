@@ -1,7 +1,7 @@
 /*******************************************************************************
- * this user.js file was prepared for Firefox v93 with help from
+ * this user.js file was prepared for Firefox v96 with help from
  * the following GitHub projects -
- * https://github.com/arkenfox/user.js     [git commit 85438d0]
+ * https://github.com/arkenfox/user.js     [git commit ab7380c]
  * and other sources on the Internet
  * NOTE: this file is made only for the master profile
  ******************************************************************************/
@@ -22,22 +22,21 @@
   1600: HEADERS / REFERERS
   1700: CONTAINERS
   2000: PLUGINS / MEDIA / WEBRTC
-  2300: WEB WORKERS
   2400: DOM (DOCUMENT OBJECT MODEL)
   2600: MISCELLANEOUS
-  2700: PERSISTENT STORAGE
-  2800: SHUTDOWN
-  4000: FPI (FIRST PARTY ISOLATION)
+  2700: ETP (ENHANCED TRACKING PROTECTION)
+  2800: SHUTDOWN & SANITIZING
   4500: RFP (RESIST FINGERPRINTING)
   5000: OPTIONAL OPSEC
   5500: OPTIONAL HARDENING
   6000: DON'T TOUCH
   7000: DON'T BOTHER
-  8000: DON'T BOTHER: NON-RFP
+  8000: DON'T BOTHER: FINGERPRINTING
   9000: PERSONAL
   9999: DEPRECATED / REMOVED / LEGACY / RENAMED
 */
 
+/* 0000 */
 user_pref("browser.aboutConfig.showWarning", false);
 
 /* 0200 */
@@ -72,9 +71,10 @@ user_pref("browser.shell.shortcutFavicons", false);
 
 /* 1200 */
 user_pref("security.ssl.require_safe_negotiation", true);
-user_pref("security.tls.version.enable-deprecated", false);
 user_pref("security.tls.enable_0rtt_data", false);
-user_pref("security.OCSP.require", true);
+/* this leaks your browsing history to OCSP responders and end up implementing
+ * soft-fail which makes this virtually useless in terms of security */
+user_pref("security.OCSP.enabled", 0);
 user_pref("security.pki.sha1_enforcement_level", 1);
 user_pref("security.cert_pinning.enforcement_level", 2);
 user_pref("security.remote_settings.crlite_filters.enabled", true);
@@ -93,6 +93,7 @@ user_pref("privacy.userContext.ui.enabled", true);
 
 /* 2000 */
 user_pref("media.eme.enabled", false);
+user_pref("browser.eme.ui.enabled", false)
 user_pref("media.gmp-provider.enabled", false);
 user_pref("media.peerconnection.enabled", false);
 user_pref("media.getusermedia.screensharing.enabled", false);
@@ -111,8 +112,8 @@ user_pref("browser.uitour.url", "");
 user_pref("network.IDN_show_punycode", true);
 user_pref("permissions.delegation.enabled", false);
 
-/* 4000 */
-user_pref("privacy.firstparty.isolate", true);
+/* 2700 */
+user_pref("privacy.partition.serviceWorkers", true);
 
 /* 4500 */
 user_pref("webgl.disabled", true);
