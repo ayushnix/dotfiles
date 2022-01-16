@@ -3,10 +3,9 @@
 counter=1
 
 while read -r commit_msg; do
-  # I guess I could use break instead of continue but I'm not sure if the first
-  # encounter of '#' should be treated as the end of commit message
+  # the first encounter of '#' should be treated as the end of commit message
   if [[ "${commit_msg:0:1}" == "#" ]]; then
-    continue
+    break
   fi
   if [[ "$counter" -eq 1 && "${#commit_msg}" -gt 50 ]]; then
     printf '%s\n' "The commit message summary was ${#commit_msg} characters long." >&2
