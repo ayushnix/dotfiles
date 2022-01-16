@@ -51,9 +51,9 @@ download_files() {
 
 check_files() {
   printf "%s\n" "[#] Checking if sysupgrade files are available ..."
-  wget -qs "$upgrade_url" || _die "sysupgrade file not found, exiting!"
-  wget -qs "$sha256_url" || _die "sha256 file not found, exiting!"
-  wget -qs "$sign_url" || _die "usign file not found, exiting!"
+  wget -q --spider "$upgrade_url" || _die "sysupgrade file not found, exiting!"
+  wget -q --spider "$sha256_url" || _die "sha256 file not found, exiting!"
+  wget -q --spider "$sign_url" || _die "usign file not found, exiting!"
 }
 
 verify_files() {
