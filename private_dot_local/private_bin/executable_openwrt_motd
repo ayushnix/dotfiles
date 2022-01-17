@@ -1,0 +1,90 @@
+#!/bin/sh
+# SPDX-License-Identifier: ISC
+#
+# Copyright (c) 2021 Ayush Agarwal
+#
+# Permission to use, copy, modify, and /or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+# REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+# AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+# INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+# LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+# OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+# PERFORMANCE OF THIS SOFTWARE.
+#
+# -----------------------------------------------------------------------------
+#
+# disable warning about use of `local` because busybox ash, used in OpenWRT,
+# supports it
+# shellcheck disable=SC3043
+#
+# -----------------------------------------------------------------------------
+#
+# This script will be used as a custom motd for my OpenWRT router. I don't like
+# writing ugly scripts like this but OpenWRT doesn't have bash or GNU utils by
+# default, and for pretty good reasons. I expect the interface of the commands
+# that I'm using here to be relatively stable for quite a while but, like I
+# said, this script is ugly and it can misbehave.
+
+openwrt_hostname() {
+  local hstnm
+
+  hstnm="$(uci show system.@system[0].hostname | cut -d "=" -d "'" -f 2)"
+  printf "%s\n" "hostname............: $hstnm"
+}
+
+openwrt_uptime() {
+  local upt dys hrs mnts secs
+  upt="$(cut -d '.' -f 1 /proc/uptime)"
+  dys=$((upt / 60 / 60 / 24))
+  hrs=$((upt / 60 / 60 % 24))
+  mnts=$((upt / 60 % 60))
+  secs=$((upt % 60))
+
+  printf "%s\n" "uptime..............: $dys days $hrs hours $mnts minutes $secs seconds"
+}
+
+openwrt_disk() {
+  local dsksp
+  dsksp="$(df | grep ^overlay | awk -F ' ' '{print $5}')"
+
+  printf "%s\n" "disk space..........: $dsksp"
+}
+
+openwrt_rel() {
+  local openwrt_url="https://downloads.openwrt.org/releases/"
+  local release_reg=">[0-9][0-9].[0-9][0-9].[0-9]<"
+  local latest_rel
+  latest_rel="$(curl -s "$openwrt_url" | grep -o -E "$release_reg" | tail -n 1 | sed 's:[<>]::g')"
+
+  printf "%s\n" "latest release......: $latest_rel"
+}
+
+openwrt_certexp() {
+  local cert_expiry
+
+  if [ -n "$1" ]; then
+    cert_expiry="$(openssl x509 -in "$1" -noout -text \
+      | grep 'Not After' | awk -F ' ' '{print $4,$5,$6,$7,$8}')"
+    printf "%s\n" "certificate exp.....: $cert_expiry"
+  else
+    printf "%s\n" "certificate exp.....: no certificate provided"
+  fi
+}
+
+main() {
+  printf "%s\n" ""
+  printf "%s\n" "---"
+  openwrt_hostname
+  openwrt_uptime
+  openwrt_disk
+  openwrt_certexp "$@"
+  openwrt_rel
+  printf "%s\n" "---"
+  printf "%s\n" ""
+}
+
+main "$@"
