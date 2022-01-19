@@ -10,7 +10,6 @@ thermometer-empty = "\uf2cb"
 block = "time"
 format = "%I:%M %p %a %d %b %Y"
 interval = 15
-on_click = "gsimplecal"
 icons_format = ""
 
 [[block]]
