@@ -52,14 +52,16 @@ cmd bulkrename ${{
 }}
 
 # custom trash command
-# won't use gio trash/trash-cli, they don't allow changing trash location
+# won't use gio trash, it doesn't allow changing trash location
+# won't use trash-cli as well because it has this bug
+# https://github.com/andreafrancia/trash-cli/issues/214
 $mkdir -p /data/others/.trash
 cmd trash %{{
-    printf "%s\n" " Do you want to trash the selected file(s)? [yY/nN] "
+    printf "%s\n" " Do you want to trash the selected file(s)? [Y/n] "
     read -r confirm
     case $confirm in
-      y | Y) mv $fx /data/others/.trash ;;
-      n | N) exit 0 ;;
+      Y) mv $fx /data/others/.trash ;;
+      n) exit 0 ;;
     esac
 }}
 

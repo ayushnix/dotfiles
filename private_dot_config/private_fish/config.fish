@@ -49,12 +49,12 @@ end
 
 function confirm -d 'confirm before execution'
   while true
-    read -p 'echo "Confirm (Yy/Nn):"' -l conf
+    read -p 'echo "Confirm (Y/n):"' -l conf
     switch $conf
-      case Y y
+      case Y
         $argv
         return 0
-      case N n
+      case n
         return 1
     end
   end
