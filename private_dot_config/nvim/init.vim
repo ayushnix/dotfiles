@@ -19,7 +19,6 @@ Plug 'chrisbra/unicode.vim'
 Plug 'dense-analysis/ale'
 " PREVIEW --------------------------------------------------------------------
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
-Plug 'ellisonleao/glow.nvim'
 call plug#end()
 
 " }}}

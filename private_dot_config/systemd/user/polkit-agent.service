@@ -4,7 +4,7 @@ PartOf=graphical-session.target
 After=graphical-session.target
 
 [Service]
-ExecStart=/usr/lib/mate-polkit/polkit-mate-authentication-agent-1
+ExecStart=/usr/bin/lxqt-policykit-agent
 Restart=on-failure
 
 [Install]

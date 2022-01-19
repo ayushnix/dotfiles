@@ -6,7 +6,9 @@ After=swaywm.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/swayidle
+ExecStart=/usr/bin/swayidle \
+  timeout 600 'swaymsg "output * dpms off"' \
+      resume 'swaymsg "output * dpms on"' \
 
 [Install]
 WantedBy=swaywm.target
