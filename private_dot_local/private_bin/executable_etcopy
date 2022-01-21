@@ -10,40 +10,30 @@ if ! command -v rsync > /dev/null 2>&1; then
 fi
 
 backup_files=(
-  "pacman.d/hooks/100-systemd-boot.hook"
-  "pacman.d/hooks/101-export-explicit-pkgs.hook"
-  "pacman.d/hooks/101-export-optional-pkgs.hook"
+  "pacman.d/hooks/"
   "sysctl.d/21-networking-performance.conf"
-  "sysctl.d/22-stack-harden.conf"
-  "sysctl.d/23-virtual-memory.conf"
-  "sysctl.d/50-kernel-harden.conf"
-  "sysctl.d/52-coredump.conf"
-  "udev/rules.d/60-ioschedulers.rules"
-  "interception/udevmon.d/caps2esc.yaml"
-  "tmpfiles.d/cursor.conf"
-  "modprobe.d/thinkpad_acpi.conf"
+  "sysctl.d/"
+  "udev/rules.d/"
+  "tmpfiles.d/"
+  "modprobe.d/"
   "ssh/sshd_config"
   "X11/Xwrapper.config"
-  "X11/xorg.conf.d/10-block-tty-dont-kill-x.conf"
-  "X11/xorg.conf.d/20-amdgpu.conf"
-  "X11/xorg.conf.d/30-disable-dpms.conf"
+  "X11/xorg.conf.d/"
   "makepkg.conf"
   "mkinitcpio.conf"
   "pacman.conf"
   "systemd/coredump.conf"
   "systemd/journald.conf"
-  "systemd/system/user@1000.service.d/override.conf"
-  "systemd/system/getty@tty1.service.d/override.conf"
-  "systemd/system/sshd.service.d/override.conf"
-  "systemd/system/syncthing@proteus.service.d/override.conf"
-  "systemd/logind.conf.d/neptune.conf"
+  "systemd/system/user@1000.service.d/"
+  "systemd/system/getty@tty1.service.d/"
+  "systemd/system/sshd.service.d/"
+  "systemd/system/syncthing@proteus.service.d/"
+  "systemd/logind.conf.d/"
 )
 
 for file in "${backup_files[@]}"; do
-  rsync -Rt /etc/"$file" "$XDG_CONFIG_HOME"/ || {
-    printf '%s\n' "unable to copy $file" >&2
-    exit 1
-  }
+  rsync -Rrt --delete /etc/"$file" "$XDG_CONFIG_HOME"/ 2> /dev/null \
+    || printf "%s\n" "unable to copy $file" >&2
 done
 
 unset -v file backup_files
