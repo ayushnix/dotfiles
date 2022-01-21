@@ -1,0 +1,70 @@
+[flags]
+# GENERIC
+basic = false
+battery = false
+default_time_value = 30000
+default_widget_type = "proc"
+default_widget_count = 1
+disable_click = true
+hide_table_gap = false
+hide_time = false
+color = "default"
+rate = 1000
+show_table_scroll_position = false
+
+# PROCESS
+tree = true
+group_processes = false
+case_sensitive = false
+whole_word = false
+regex = false
+process_command = false
+disable_advanced_kill = false
+
+# CPU
+hide_avg_cpu = true
+dot_marker = false
+left_legend = true
+current_usage = false
+
+# RAM
+mem_as_value = true
+
+# TEMP
+temperature_type = "celsius"
+time_delta = 15000
+
+# NETWORK
+use_old_network_legend = false
+network_use_binary_prefix = false
+network_use_bytes = false
+network_use_log = false
+
+[[row]]
+  [[row.child]]
+  type="mem"
+  [[row.child]]
+  type="net"
+[[row]]
+  ratio=2
+  [[row.child]]
+  type="cpu"
+  [[row.child]]
+    [[row.child.child]]
+    type="temp"
+    [[row.child.child]]
+    ratio=2
+    type="disk"
+[[row]]
+  ratio=3
+  [[row.child]]
+  type="proc"
+  default=true
+
+# disk, mount, and net filters can be defined as well
+[temp_filter]
+is_list_ignored = true
+list = ["thinkpad"]
+regex = false
+case_sensitive = false
+whole_word = false
