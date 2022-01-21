@@ -1,8 +1,0 @@
-- JOB: "intercept -g /dev/input/by-id/usb-SONiX_USB_DEVICE-event-kbd | caps2esc -m 1 | uinput -d /dev/input/by-id/usb-SONiX_USB_DEVICE-event-kbd"
-  DEVICE:
-    EVENTS:
-      EV_KEY: [KEY_CAPSLOCK, KEY_ESC]
-#- JOB: "intercept -g /dev/input/event4 | caps2esc -m 1 | uinput -d /dev/input/event4"
-#  DEVICE:
-#    EVENTS:
-#      EV_KEY: [KEY_CAPSLOCK, KEY_ESC]
