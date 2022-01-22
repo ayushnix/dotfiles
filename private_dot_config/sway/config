@@ -179,7 +179,8 @@ include colors.conf
 bar {
     id rustbar
     status_command /usr/bin/i3status-rs $XDG_CONFIG_HOME/i3status-rust/config.toml
-    font pango:SF Mono, Font Awesome 5 Free, Font Awesome 5 Brands, 16
+    font pango:iA Writer Mono V, Font Awesome 5 Free, Font Awesome 5 Brands, 16
+    # font pango:SF Mono, Font Awesome 5 Free, Font Awesome 5 Brands, 16
     # font pango:Red Hat Mono VF, Font Awesome 5 Free, Font Awesome 5 Brands, 16
     hidden_state show
     mode dock
@@ -211,7 +212,7 @@ for_window [app_id="chromium"]                    move container to workspace $W
 for_window [app_id="^mpv$"]                       move container to workspace $WS4
 for_window [app_id="org.pwmt.zathura"]            move container to workspace $WS5
 for_window [app_id="kvantummanager"]              move container to workspace $WS7
-for_window [app_id="qt5ct"]                       move container to workspace $WS7
+for_window [app_id="^qt[5-6]ct$"]                 move container to workspace $WS7
 for_window [app_id="org.qbittorrent.qBittorrent"] move container to workspace $WS7
 
 # fullscreen
@@ -227,7 +228,8 @@ for_window [app_id="^firefox.*" title="^About Mozilla Firefox$"]                
 for_window [app_id="^firefox.*" title="You’ve launched an older version of Firefox"] focus, floating enable
 for_window [app_id="^firefox.*" title="^Page Info -.*"]                              focus, floating enable
 for_window [app_id="kvantummanager"]                                                 focus, floating enable
-for_window [app_id="qt5ct"]                                                          focus, floating enable
+for_window [app_id="^qt[5-6]ct$"]                                                    focus, floating enable
+for_window [app_id="pinentry-qt"]                                                    focus, floating enable
 for_window [app_id="qbittorrent" title="Open Torrent Files"]                         focus, floating enable
 for_window [app_id="^pavucontrol"]                                                   focus, floating enable
 
