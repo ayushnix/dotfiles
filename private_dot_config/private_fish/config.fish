@@ -11,6 +11,16 @@ function cat -d 'use busybox cat'
   busybox cat $argv
 end
 
+# busybox tar gets alignment of columns right when using tvf
+function tar -d 'use busybox tar'
+  busybox tar $argv
+end
+
+# use gnu tar if needed
+function gtar -d 'use gnu tar'
+  command tar $argv
+end
+
 function ip -w ip -d 'use ip with colors'
   command ip -c $argv
 end
