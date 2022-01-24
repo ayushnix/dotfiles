@@ -82,9 +82,18 @@ bindsym $mod+grave workspace back_and_forth
 
 # configure the keyboard
 input type:keyboard {
+    xkb_layout us
+    xkb_numlock enabled
     repeat_delay 350
     repeat_rate 35
-    xkb_layout us
+}
+
+input "12951:6505:ZSA_Moonlander_Mark_I" {
+    xkb_layout ""
+    xkb_variant ""
+    xkb_numlock enabled
+    repeat_delay 350
+    repeat_rate 35
 }
 
 # configure the laptop touchpad
@@ -237,16 +246,25 @@ for_window [app_id="^pavucontrol"]                                              
 
 #: APPLICATION SHORTCUTS {{{
 
-bindsym $mod+Return   workspace $WS1, exec foot
-bindsym $mod+End      workspace $WS2, exec firefox --new-instance --ProfileManager
-bindsym $mod+space    workspace $WS3, exec footclient lf
-bindsym $mod+Insert   workspace $WS4; exec 'systemctl --user restart spotifyd.service; footclient spt'
+bindsym XF86AudioPrev        exec playerctl previous
+bindsym XF86AudioPlay        exec playerctl play-pause
+bindsym XF86AudioStop        exec playerctl stop
+bindsym XF86AudioNext        exec playerctl next
+bindsym XF86AudioRaiseVolume exec playerctl volume 0.05+
+bindsym XF86AudioForward     exec playerctl position 10+
+bindsym XF86AudioRewind      exec playerctl position 10-
+bindsym XF86AudioLowerVolume exec playerctl volume 0.05-
 
-bindsym $mod+d        exec bemenu-run
-bindsym $mod+z        exec env TESSEN_DELAY=100 tessen -b bemenu
-bindsym $mod+s        exec 'grim -g "$(slurp)" - | swappy -f -'
-bindsym $mod+c        exec rofi -show calc -modi calc -no-show-match -no-sort -no-history -no-fixed-num-lines -lines 0
-bindsym $mod+m        exec scrlck
+bindsym $mod+Return workspace $WS1, exec foot
+bindsym $mod+End    workspace $WS2, exec firefox --new-instance --ProfileManager
+bindsym $mod+space  workspace $WS3, exec footclient lf
+bindsym $mod+Insert workspace $WS4; exec 'systemctl --user restart spotifyd.service; footclient spt'
+
+bindsym $mod+d exec bemenu-run
+bindsym $mod+z exec env TESSEN_DELAY=100 tessen -b bemenu
+bindsym $mod+s exec 'grim -g "$(slurp)" - | swappy -f -'
+bindsym $mod+c exec rofi -show calc -modi calc -no-show-match -no-sort -no-history -no-fixed-num-lines -lines 0
+bindsym $mod+m exec scrlck
 
 # create a pipe for wob
 # exec mkfifo $SWAYSOCK.wob && tail -f $SWAYSOCK.wob | wob
