@@ -30,7 +30,7 @@ function ipb -w ip -d 'show brief output of ip addr'
 end
 
 function vim -w nvim -d 'use neovim instead of vim'
-  nvim $argv
+  env SHELL=/bin/sh nvim $argv
 end
 
 function df -d 'show human readable numbers'
