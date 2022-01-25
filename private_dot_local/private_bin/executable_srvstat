@@ -1,0 +1,8 @@
+#!/bin/bash
+
+mapfile -t sys_srv < <(systemctl --failed | jc --systemctl | jq -r '.[].unit')
+mapfile -t usr_srv < <(systemctl --user --failed | jc --systemctl | jq -r '.[].unit')
+
+if [[ "${sys_srv[0]}" != 0 ]] || [[ "${usr_srv[0]}" != 0 ]]; then
+  exit 1
+fi

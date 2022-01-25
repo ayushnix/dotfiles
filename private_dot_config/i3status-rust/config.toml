@@ -7,6 +7,13 @@ thermometer-full = "\uf2c7"
 thermometer-empty = "\uf2cb"
 
 [[block]]
+block = "custom"
+command = "~/.local/bin/srvstat || echo '\uf071'"
+interval = 60
+hide_when_empty = true
+shell = "bash"
+
+[[block]]
 block = "time"
 format = "%I:%M %p %a %d %b %Y"
 interval = 15
@@ -50,3 +57,9 @@ command_on = "systemctl --user start wlsunset"
 command_off = "systemctl --user stop wlsunset"
 icon_on = "thermometer-full"
 icon_off = "thermometer-empty"
+
+[[block]]
+block = "custom"
+command = "echo \uf011"
+on_click = "systemctl `echo -e 'suspend\nreboot\npoweroff' | bemenu`"
+interval = "once"

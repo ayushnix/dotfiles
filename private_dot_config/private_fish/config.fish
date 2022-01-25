@@ -49,6 +49,10 @@ function ll -w exa -d 'list files and directors'
   exa -lag --group-directories-first $argv
 end
 
+function chmox -d "make a file executable"
+  chmod +x $argv
+end
+
 function dice -w xkcdpass -d 'use diceware to generate 6 word passphrases'
   xkcdpass -c 10 $argv
 end
@@ -86,15 +90,15 @@ end
 #: PACMAN {{{
 
 function pupg -d 'upgrade packages'
-  printf '%s\n' '--------------------------'
-  printf '%s\n' 'starting pacman update ...'
-  printf '%s\n' '--------------------------'
+  printf "%s\n" "--------------------------"
+  printf "%s\n" "starting pacman update ..."
+  printf "%s\n" "--------------------------"
   doas pacman -Syu $argv
 
   if command -q aur
-    printf '%s\n' '------------------------'
-    printf '%s\n' 'checking aur updates ...'
-    printf '%s\n' '------------------------'
+    printf "%s\n" "------------------------"
+    printf "%s\n" "checking aur updates ..."
+    printf "%s\n" "------------------------"
     aur repo -l | aur vercmp
   end
 end
@@ -152,8 +156,28 @@ function re -d 'reboot the machine'
 end
 
 function errlogs -d 'show the errors in logs since boot'
+  printf "%s\n" "-----------"
+  printf "%s\n" "[#] JOURNAL"
+  printf "%s\n" "-----------"
   journalctl -b -p 0..3 $argv
-  systemctl --failed
+  printf "%s\n" "------------------------"
+  printf "%s\n" "[#] SYSTEMD FAILED UNITS"
+  printf "%s\n" "------------------------"
+  set -l sys_srv (systemctl --failed | jc --systemctl | jq -r '.[].unit')
+  if [ "$sys_srv[1]" != 0 ]
+    printf "%s\n" "$sys_srv"
+  else
+    printf "%s\n" "NONE"
+  end
+  printf "%s\n" "-----------------------------"
+  printf "%s\n" "[#] SYSTEMD USER FAILED UNITS"
+  printf "%s\n" "-----------------------------"
+  set -l usr_srv (systemctl --user --failed | jc --systemctl | jq -r '.[].unit')
+  if [ "$usr_srv[1]" != 0 ]
+    printf "%s\n\n" "$usr_srv"
+  else
+    printf "%s\n\n" "NONE"
+  end
 end
 
 #: }}}
