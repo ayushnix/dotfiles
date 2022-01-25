@@ -188,9 +188,8 @@ include colors.conf
 bar {
     id rustbar
     status_command /usr/bin/i3status-rs $XDG_CONFIG_HOME/i3status-rust/config.toml
-    font pango:iA Writer Mono V, Font Awesome 5 Free, Font Awesome 5 Brands, 16
-    # font pango:SF Mono, Font Awesome 5 Free, Font Awesome 5 Brands, 16
-    # font pango:Red Hat Mono VF, Font Awesome 5 Free, Font Awesome 5 Brands, 16
+    font pango:SF Mono, Font Awesome 5 Free, Font Awesome 5 Brands, 16
+    # font pango:IBM Plex Mono, Font Awesome 5 Free, Font Awesome 5 Brands, 16
     hidden_state show
     mode dock
     pango_markup enabled
