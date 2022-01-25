@@ -53,3 +53,5 @@
     file-decoration-style = none
 [commit]
 	verbose = true
+[merge]
+	conflictStyle = zdiff3
