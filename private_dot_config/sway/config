@@ -235,11 +235,13 @@ for_window [app_id="^firefox.*" title="^Library$"]                              
 for_window [app_id="^firefox.*" title="^About Mozilla Firefox$"]                     focus, floating enable
 for_window [app_id="^firefox.*" title="You’ve launched an older version of Firefox"] focus, floating enable
 for_window [app_id="^firefox.*" title="^Page Info -.*"]                              focus, floating enable
+for_window [app_id="flameshot" title="Save screenshot"]                              focus, floating enable
 for_window [app_id="kvantummanager"]                                                 focus, floating enable
 for_window [app_id="^qt[5-6]ct$"]                                                    focus, floating enable
 for_window [app_id="pinentry-qt"]                                                    focus, floating enable
 for_window [app_id="qbittorrent" title="Open Torrent Files"]                         focus, floating enable
 for_window [app_id="^pavucontrol"]                                                   focus, floating enable
+for_window [app_id="lxqt-policykit-agent"]                                           focus, floating enable
 
 #: }}}
 
