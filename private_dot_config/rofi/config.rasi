@@ -1,6 +1,6 @@
 configuration {
     modi:             "run";
-    terminal:         "alacritty";
+    terminal:         "footclient";
     matching:         "regex";
     max-history-size: 15;
     display-run:      "🗲";
