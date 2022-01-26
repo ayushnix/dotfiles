@@ -17,7 +17,6 @@ shell = "bash"
 block = "time"
 format = "%I:%M %p %a %d %b %Y"
 interval = 15
-icons_format = ""
 
 [[block]]
 block = "net"
