@@ -1,4 +1,6 @@
--- NEOVIM SETTINGS
+-- INIT.LUA
 
-require('settings')
+require('options')
+require('keymaps')
+require('autocmd')
 require('plugins')
