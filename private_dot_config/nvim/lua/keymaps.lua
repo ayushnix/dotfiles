@@ -13,6 +13,7 @@ map('n', '<Leader>s', ':w<CR>', nmap_opt)
 map('n', '<Leader>q', ':wq<CR>', nmap_opt)
 map('n', '<Leader>z', ':ZenMode<CR>', nmap_opt)
 map('n', '<Leader>u', ':PackerSync<CR>', nmap_opt)
+map('n', '<Leader>c', ':ColorizerToggle<CR>', nmap_opt)
 
 -- disable arrow keys (why would you use arrow keys in nvim?!)
 map('n', '<Up>', '<NOP>', nmap_opt)

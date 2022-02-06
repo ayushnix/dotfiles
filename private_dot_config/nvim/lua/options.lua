@@ -23,7 +23,7 @@ local runtime_files = {
   'rrhelper',
   'spellfile_plugin',
   'matchit',
-  'fzf'
+  'fzf',
 }
 for _, plug in pairs(runtime_files) do
   g['loaded_' .. plug] = 1
@@ -34,14 +34,14 @@ local providers = {
   'python_provider',
   'python3_provider',
   'ruby_provider',
-  'node_provider'
+  'node_provider',
 }
 for _, provider in pairs(providers) do
   g['loaded_' .. provider] = 0
 end
 
 -- nvim configuration options
-opt.shortmess:append 'I'
+opt.shortmess:append('I')
 local options = {
   guicursor = 'n-v-r:block,i:hor100',
   secure = true,
@@ -58,7 +58,7 @@ local options = {
   lazyredraw = true,
   synmaxcol = 240,
   clipboard = 'unnamedplus',
-  background = 'dark'
+  background = 'dark',
 }
 for k, v in pairs(options) do
   o[k] = v

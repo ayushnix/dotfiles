@@ -1,11 +1,11 @@
-local ok, pairs = pcall(require, 'mini.pairs')
-if not ok then
+local p_ok, pairs = pcall(require, 'mini.pairs')
+if not p_ok then
   vim.notify('unable to find mini.pairs')
   return
 end
 
-local ok, surround = pcall(require, 'mini.surround')
-if not ok then
+local s_ok, surround = pcall(require, 'mini.surround')
+if not s_ok then
   vim.notify('unable to find mini.surround')
   return
 end
@@ -14,8 +14,8 @@ local srd = {
   mappings = {
     find = '',
     find_left = '',
-    update_n_lines = ''
-  }
+    update_n_lines = '',
+  },
 }
 
 pairs.setup()

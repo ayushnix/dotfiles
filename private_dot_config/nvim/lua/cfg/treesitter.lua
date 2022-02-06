@@ -12,10 +12,12 @@ configs.setup {
     'toml',
     'yaml',
     'lua',
-    'vim'
+    'vim',
+    'python',
+    'markdown',
   },
   highlight = {
     enable = true,
-    additional_vim_regex_highlighting = false
-  }
+    additional_vim_regex_highlighting = false,
+  },
 }
