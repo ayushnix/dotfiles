@@ -1,0 +1,10 @@
+[terminal]
+vt = 1
+
+[default_session]
+command = "tuigreet -g 'It was discovered by Voyager 2' -t -r --asterisks -c /etc/greetd/sway-run"
+user = "nobody"
+
+[initial_session]
+command = "/etc/greetd/sway-run"
+user = "proteus"
