@@ -256,13 +256,12 @@ bindsym XF86AudioForward     exec playerctl position 10+
 bindsym XF86AudioRewind      exec playerctl position 10-
 bindsym XF86AudioLowerVolume exec playerctl volume 0.05-
 
-bindsym $mod+Return workspace $WS1, exec foot
+bindsym $mod+Return workspace $WS1, exec foot -d warning
 bindsym $mod+End    workspace $WS2, exec firefox --new-instance --ProfileManager
 bindsym $mod+space  workspace $WS3, exec footclient lf
-bindsym $mod+Insert workspace $WS4; exec 'systemctl --user restart spotifyd.service; footclient spt'
 
-bindsym $mod+d exec bemenu-run
-bindsym $mod+z exec env TESSEN_DELAY=100 tessen -b bemenu
+bindsym $mod+d exec rofi -show run
+bindsym $mod+z exec env TESSEN_DELAY=100 tessen -b rofi
 bindsym $mod+s exec 'grim -g "$(slurp)" - | swappy -f -'
 bindsym $mod+c exec rofi -show calc -modi calc -no-show-match -no-sort -no-history -no-fixed-num-lines -lines 0
 bindsym $mod+m exec scrlck
