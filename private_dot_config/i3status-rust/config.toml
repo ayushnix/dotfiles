@@ -60,5 +60,5 @@ icon_off = "thermometer-empty"
 [[block]]
 block = "custom"
 command = "echo \uf011"
-on_click = "systemctl `echo -e 'suspend\nreboot\npoweroff' | bemenu`"
+on_click = "doas -n /usr/sbin/systemctl `echo -e 'suspend\nreboot\npoweroff' | rofi -dmenu`"
 interval = "once"

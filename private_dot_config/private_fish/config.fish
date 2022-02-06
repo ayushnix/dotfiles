@@ -1,5 +1,9 @@
 # config.fish
 
+# set the umask
+# this is needed when .bash_profile doesn't act as the display manager
+umask 0027
+
 #: ALIAS {{{
 
 function vi -d 'use busybox vi'
@@ -144,15 +148,15 @@ end
 #: SYSTEMD {{{
 
 function pw -d 'power off the machine'
-  confirm systemctl poweroff
+  confirm doas /usr/sbin/systemctl poweroff
 end
 
 function sl -d 'suspend the machine'
-  confirm systemctl suspend
+  confirm doas /usr/sbin/systemctl suspend
 end
 
 function re -d 'reboot the machine'
-  confirm systemctl reboot
+  confirm doas /usr/sbin/systemctl reboot
 end
 
 function errlogs -d 'show the errors in logs since boot'
@@ -199,6 +203,7 @@ if status --is-interactive
   abbr -a -g -- gitcl 'git clone'
   # DOAS
   abbr -a -g -- doasedit 'doas busybox vi'
+  abbr -a -g -- doascat 'doas busybox cat'
 end
 
 #: }}}
