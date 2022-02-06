@@ -1,0 +1,5 @@
+# partially complete the word and show all possible completions
+set show-all-if-ambiguous on
+
+# display possible completions using different colors to indicate their file type
+set colored-stats On
