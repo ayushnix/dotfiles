@@ -1,24 +1,20 @@
 #!/bin/sh
 
 # clear the cached GPG keys
-gpg-connect-agent reloadagent /bye > /dev/null || {
-  printf '%s\n' "unable to clear the GPG cache" >&2
-  exit 1
-}
+gpg-connect-agent reloadagent /bye > /dev/null \
+  || printf '%s\n' "unable to clear the GPG cache" >&2
 
 # clear the cached SSH keys
-ssh-add -D 2> /dev/null || {
-  printf '%s\n' "unable to clear the SSH keys" >&2
-  exit 1
-}
+ssh-add -D 2> /dev/null \
+  || printf '%s\n' "unable to clear the SSH keys" >&2
 
 # clear the clipboard
-wl-copy --clear
+wl-copy --clear \
+  || printf '%s\n' "unable to clear the clipboard" >&2
 
 # close password store
-pass close > /dev/null || {
-  printf '%s\n' "unable to close password store" >&2
-}
+pass close > /dev/null \
+  || printf '%s\n' "unable to close password store" >&2
 
 # TODO: enable usbguard while locked and disable after unlocked
 
@@ -27,4 +23,8 @@ pass close > /dev/null || {
 # needless to say, it shouldn't be relied upon for security, whatsoever
 # https://github.com/swaywm/swaylock/issues/163
 # see this as well - https://github.com/swaywm/wlroots/issues/2706
+#
+# UPDATE: a new protocol has been merged into wlroots and in swaylock although
+# I'm not sure if it's any better in terms of security than what we had before
+# https://gitlab.freedesktop.org/wayland/wayland-protocols/-/merge_requests/131
 swaylock || "$HOME"/.local/bin/scrlck
