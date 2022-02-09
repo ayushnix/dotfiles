@@ -11,7 +11,7 @@ local linter = null.builtins.diagnostics
 
 local cfg_path = {
   fn.expand('~/.config/stylua/stylua.toml'),
-  fn.expand('~/.config/selene/selene.toml')
+  fn.expand('~/.config/selene/selene.toml'),
 }
 for _, v in pairs(cfg_path) do
   if fn.filewritable(v) ~= 1 then
@@ -27,11 +27,13 @@ local src = {
   },
   linter.shellcheck,
   format.stylua.with {
-    extra_args = { '--config-path=', cfg_path[1] },
+    extra_args = { '-f', cfg_path[1] },
   },
-  linter.selene.with {
-    extra_args = { '--config', cfg_path[2] }
-  },
+  -- pretty nice linter, wouldn't you agree?
+  -- https://github.com/Kampfkarren/selene/issues/339
+  -- linter.selene.with {
+  --   extra_args = { '--config', cfg_path[2] },
+  -- },
 }
 
 null.setup {

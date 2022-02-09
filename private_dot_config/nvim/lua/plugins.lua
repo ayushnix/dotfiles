@@ -55,6 +55,17 @@ return require('packer').startup(function(use)
   -- a plugin often used as a dependency by other plugins
   use { 'nvim-lua/plenary.nvim', module = 'plenary' }
 
+  -- replacement for filetype.vim
+  -- this might become redundant with nvim v0.7 and above
+  -- https://github.com/nathom/filetype.nvim/issues/68
+  use {
+    'nathom/filetype.nvim',
+    disable = true,
+    setup = {
+      vim.cmd('runtime! autoload/dist/ft.vim'),
+    },
+  }
+
   -- the colorscheme that I like for dark mode
   use {
     'navarasu/onedark.nvim',
@@ -64,6 +75,7 @@ return require('packer').startup(function(use)
   -- use lualine for a more informative statusline when using linters
   use {
     'nvim-lualine/lualine.nvim',
+    disable = true,
     config = cfg('lualine'),
   }
 
@@ -81,14 +93,12 @@ return require('packer').startup(function(use)
     config = cfg('zen-mode'),
   }
 
-  -- jump to characters using lightspeed
+  -- jump to characters using hop
   use {
-    'ggandor/lightspeed.nvim',
-    keys = {
-      '<Plug>Lightspeed_s',
-      '<Plug>Lightspeed_S',
-    },
-    setup = cfg('lightspeed'),
+    'phaazon/hop.nvim',
+    branch = 'v1',
+    cmd = 'HopPattern',
+    config = cfg('hop'),
   }
 
   -- create and delete pairs using mini.pairs
@@ -101,7 +111,10 @@ return require('packer').startup(function(use)
 
   -- insert comments using kommentary
   -- could've used mini.comment but it doesn't support multi-line comments
-  use('b3nj5m1n/kommentary')
+  use {
+    'b3nj5m1n/kommentary',
+    config = cfg('comments'),
+  }
 
   -- use null-ls for linting and formatting code
   use {
@@ -119,6 +132,32 @@ return require('packer').startup(function(use)
   use {
     'norcalli/nvim-colorizer.lua',
     cmd = 'ColorizerToggle',
+  }
+
+  -- use fzf.lua because telescope find_files is slower than native fzf, even
+  -- with the fzf-native sorter
+  use {
+    'ibhagwan/fzf-lua',
+    module = 'fzf-lua',
+    cmd = 'FzfLua',
+    config = cfg('fzf'),
+  }
+
+  -- not sure why I'd use this when I have zoxide but we'll keep it for now
+  use {
+    'is0n/fm-nvim',
+    cmd = 'Xplr',
+    config = cfg('fm'),
+  }
+
+  -- use zoxide inside vim to jump to dirs
+  use {
+    'nanotee/zoxide.vim',
+    cmd = {
+      'Z',
+      'Zi',
+    },
+    config = cfg('z'),
   }
 
   if packer_bootstrap then
