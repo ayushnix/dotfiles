@@ -212,4 +212,6 @@ end
 bind \c\[27\;5\;13~ 'execute'
 bind \e\[27\;5\;13~ 'execute'
 
+zoxide init fish | source
+
 # vim:foldmethod=marker
