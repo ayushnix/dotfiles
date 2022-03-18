@@ -10,6 +10,12 @@ if not s_ok then
   return
 end
 
+local t_ok, tab = pcall(require, 'mini.tabline')
+if not t_ok then
+  vim.notify('unable to find mini.tabline')
+  return
+end
+
 local srd = {
   mappings = {
     find = '',
@@ -18,5 +24,11 @@ local srd = {
   },
 }
 
+local tabcfg = {
+  show_icons = false,
+  set_vim_settings = false,
+}
+
 pairs.setup()
 surround.setup(srd)
+tab.setup(tabcfg)

@@ -9,7 +9,8 @@ set info "size"
 set number
 set relativenumber
 set timefmt "15:04 Mon _2 Jan 2006"
-set previewer ~/.local/bin/prv
+set previewer ~/.local/bin/lf-scripts/prv
+set period 5
 
 # }}}
 
@@ -47,7 +48,7 @@ cmd chmod_exec ${{
 }}
 
 cmd bulkrename ${{
-    ~/.local/bin/bulkr $fx
+    ~/.local/bin/lf-scripts/bulkr $fx
     lf -remote "send $id unselect"
 }}
 
@@ -95,7 +96,7 @@ map t trash
 map D delete
 map P link
 map O push :open-with<space>
-map i !~/.local/bin/prv $f
+map i !~/.local/bin/lf-scripts/prv $f
 
 map ap copy-path
 map an copy-name
@@ -103,6 +104,7 @@ map am push :mkdir<space>
 map at push :touch<space>
 map ac push :chmod<space>
 map ax chmod_exec
+map ar push r<a-b><c-b>
 
 map br bulkrename
 

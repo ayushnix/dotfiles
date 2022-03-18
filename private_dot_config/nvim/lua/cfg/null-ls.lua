@@ -23,12 +23,15 @@ end
 -- specify the list of linters and formatters you want to use in this table
 local src = {
   format.shfmt.with {
-    extra_args = { '-i', '2', '-ci', '-sr', '-bn' },
+    extra_args = { '-s', '-i', '2', '-ci', '-sr', '-bn' },
   },
-  linter.shellcheck,
+  linter.shellcheck.with {
+    diagnostics_format = '[#{c}] #{m} (#{s})',
+  },
   format.stylua.with {
     extra_args = { '-f', cfg_path[1] },
   },
+  linter.yamllint,
   -- pretty nice linter, wouldn't you agree?
   -- https://github.com/Kampfkarren/selene/issues/339
   -- linter.selene.with {

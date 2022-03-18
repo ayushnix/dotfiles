@@ -69,13 +69,13 @@ return require('packer').startup(function(use)
   -- the colorscheme that I like for dark mode
   use {
     'navarasu/onedark.nvim',
-    config = cfg('colorscheme'),
+    -- disable = true,
+    config = cfg('onedark'),
   }
 
   -- use lualine for a more informative statusline when using linters
   use {
     'nvim-lualine/lualine.nvim',
-    disable = true,
     config = cfg('lualine'),
   }
 
@@ -97,7 +97,7 @@ return require('packer').startup(function(use)
   use {
     'phaazon/hop.nvim',
     branch = 'v1',
-    cmd = 'HopPattern',
+    cmd = { 'HopPattern', 'HopChar1CurrentLine' },
     config = cfg('hop'),
   }
 
@@ -146,7 +146,7 @@ return require('packer').startup(function(use)
   -- not sure why I'd use this when I have zoxide but we'll keep it for now
   use {
     'is0n/fm-nvim',
-    cmd = 'Xplr',
+    -- cmd = 'Xplr',
     config = cfg('fm'),
   }
 
@@ -158,6 +158,12 @@ return require('packer').startup(function(use)
       'Zi',
     },
     config = cfg('z'),
+  }
+
+  -- use git signs to show added/changed/deleted lines
+  use {
+    'lewis6991/gitsigns.nvim',
+    config = cfg('gitsigns'),
   }
 
   if packer_bootstrap then

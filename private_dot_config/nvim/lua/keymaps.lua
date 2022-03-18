@@ -9,33 +9,26 @@ local expr_opt = { noremap = true, expr = true }
 map('n', '<Space>', '<NOP>', {})
 g.mapleader = ' '
 g.maplocalleader = ' '
-map('n', 'f', ':HopPattern<CR>', nmap_opt)
+
 map('n', '<Leader>s', ':w<CR>', nmap_opt)
 map('n', '<Leader>q', ':wq<CR>', nmap_opt)
-map('n', '<Leader>z', ':ZenMode<CR>', nmap_opt)
-map('n', '<Leader>u', ':PackerSync<CR>', nmap_opt)
-map('n', '<Leader>c', ':ColorizerToggle<CR>', nmap_opt)
 
 -- found this suggestion on /r/neovim, kinda amused at how obviously useful
 -- this is but I didn't think of it
 map('n', ';', ':', { noremap = true })
 
--- fzflua mappings for navigation in vim
-map('n', '<Leader>fb', ':FzfLua buffers<CR>', nmap_opt)
-map('n', '<Leader>ff', ':FzfLua files<CR>', nmap_opt)
-map('n', '<Leader>faf', ':FzfLua all_files<CR>', nmap_opt)
-
--- buffer navigation
+-- cycle through buffers
 map('n', '<Leader>bn', ':bnext<CR>', nmap_opt)
 map('n', '<Leader>bp', ':bprevious<CR>', nmap_opt)
 -- use <C-6> to switch between alternate buffers, which is what `:b#` does
 map('n', '<Leader>bd', ':bdelete<CR>', nmap_opt)
 map('n', '<Leader>bu', ':bunload<CR>', nmap_opt)
 
--- open xplr to navigate folders and view them
-map('n', '<Leader>t', ':Xplr<CR>', nmap_opt)
--- :Z is harder to press than this
-map('n', '<Leader>j', ':Z ', { noremap = true })
+-- window navigation
+map('n', '<C-h>', '<C-w>h', nmap_opt)
+map('n', '<C-l>', '<C-w>l', nmap_opt)
+map('n', '<C-j>', '<C-w>j', nmap_opt)
+map('n', '<C-k>', '<C-w>k', nmap_opt)
 
 -- disable arrow keys (why would you use arrow keys in nvim?!)
 map('n', '<Up>', '<NOP>', nmap_opt)
@@ -53,3 +46,18 @@ map('n', 'N', 'Nzz', nmap_opt)
 
 -- clear any highlights when <esc> is pressed
 map('n', '<Esc>', ':noh<CR>', nmap_opt)
+
+-- PLUGIN SPECIFIC MAPPINGS
+map('n', 'f', ':HopChar1CurrentLine<CR>', {})
+map('n', '<Leader>h', ':HopPattern<CR>', nmap_opt)
+map('n', '<Leader>z', ':ZenMode<CR>', nmap_opt)
+map('n', '<Leader>u', ':PackerSync<CR>', nmap_opt)
+map('n', '<Leader>c', ':ColorizerToggle<CR>', nmap_opt)
+
+-- fzflua mappings for navigation in vim
+map('n', '<Leader>fb', ':FzfLua buffers<CR>', nmap_opt)
+map('n', '<Leader>ff', ':FzfLua files<CR>', nmap_opt)
+map('n', '<Leader>faf', ':FzfLua all_files<CR>', nmap_opt)
+
+-- :Z is harder to press than this
+map('n', '<Leader>j', ':Z ', { noremap = true })

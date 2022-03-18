@@ -1,18 +1,34 @@
+local ok, lualine = pcall(require, 'lualine')
+if not ok then
+  vim.notify('unable to find lualine')
+  return
+end
+
 local opts = {
   options = {
-    icons_enabled = false,
-    theme = 'onedark',
     component_separators = {},
     section_separators = {},
   },
   sections = {
     lualine_a = { 'mode' },
     lualine_b = { 'filename' },
-    lualine_c = { 'branch', 'diagnostics', 'diff' },
+    lualine_c = {
+      { 'branch', icon = '' },
+      'diff',
+      {
+        'diagnostics',
+        symbols = {
+          error = ' ',
+          warn = ' ',
+          info = ' ',
+          hint = ' ',
+        },
+      },
+    },
     lualine_x = {},
-    lualine_y = { 'encoding', 'fileformat', 'filetype' },
+    lualine_y = { 'encoding', 'filetype' },
     lualine_z = { 'location' },
   },
 }
 
-require('lualine').setup(opts)
+lualine.setup(opts)

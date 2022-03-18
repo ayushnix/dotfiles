@@ -50,7 +50,7 @@ function less -w less -d 'preserve colors of stdin'
 end
 
 function ll -w exa -d 'list files and directors'
-  exa -lag --group-directories-first $argv
+  exa -lag --group-directories-first --git $argv
 end
 
 function chmox -d "make a file executable"
@@ -59,6 +59,10 @@ end
 
 function dice -w xkcdpass -d 'use diceware to generate 6 word passphrases'
   xkcdpass -c 10 $argv
+end
+
+function pass -d 'wrapper on pass to use vi as EDITOR'
+  command env EDITOR='busybox vi' pass $argv
 end
 
 #: }}}
@@ -128,7 +132,7 @@ function psea -d 'search for a package using pacman or aur (-a/--aur)'
 end
 
 function pinf -w pacman -d 'view information of a package'
-  pacman -Qi $argv 2> /dev/null; or pacman -Si $argv
+ pacman -Qi $argv 2>/dev/null; or pacman -Si $argv
 end
 
 function filepkg -w pacman -d 'check which package a binary belongs to'
@@ -186,6 +190,14 @@ end
 
 #: }}}
 
+#: BORG BACKUP {{{
+
+function borg-chk -d 'verify a backup repository'
+  borg -vp check $argv
+end
+
+#: }}}
+
 #: ABBREVIATIONS {{{
 
 if status --is-interactive
@@ -193,17 +205,19 @@ if status --is-interactive
   abbr -a -g -- gits 'git status'
   abbr -a -g -- gita 'git add'
   abbr -a -g -- gitd 'git diff'
+  abbr -a -g -- gitds 'git diff --staged'
   abbr -a -g -- gitl 'git log --decorate --graph --all --oneline'
   abbr -a -g -- gitcm 'git commit'
   abbr -a -g -- gitpl 'git pull'
   abbr -a -g -- gitps 'git push'
   abbr -a -g -- gitrb 'git rebase'
+  abbr -a -g -- gitrs 'git restore'
   abbr -a -g -- gitsw 'git switch'
   abbr -a -g -- gitsh 'git show'
   abbr -a -g -- gitcl 'git clone'
   # DOAS
-  abbr -a -g -- doasedit 'doas busybox vi'
-  abbr -a -g -- doascat 'doas busybox cat'
+  abbr -a -g -- doed 'doas busybox vi'
+  abbr -a -g -- docat 'doas busybox cat'
 end
 
 #: }}}

@@ -14,6 +14,17 @@ hide_when_empty = true
 shell = "bash"
 
 [[block]]
+block = "pacman"
+interval = 21600
+format = "{pacman}"
+format_singular = ""
+format_up_to_date = ""
+warning_updates_regex = "(age|apparmor|chromium|firefox|dash|sway|wlroots)"
+critical_updates_regex = ""
+hide_when_uptodate = true
+on_click = "env CHECKUPDATES_DB='/tmp/checkup-db-proteus/' checkupdates | rofi -dmenu"
+
+[[block]]
 block = "time"
 format = "%I:%M %p %a %d %b %Y"
 interval = 15

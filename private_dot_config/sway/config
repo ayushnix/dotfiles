@@ -81,13 +81,14 @@ bindsym $mod+grave workspace back_and_forth
 #: INPUT/OUTPUT SETTINGS {{{
 
 # configure the keyboard
-input type:keyboard {
+input "1:1:AT_Translated_Set_2_keyboard" {
     xkb_layout us
     xkb_numlock enabled
     repeat_delay 350
     repeat_rate 35
 }
 
+# configure the moonlander keyboard
 input "12951:6505:ZSA_Moonlander_Mark_I" {
     xkb_layout ""
     xkb_variant ""
@@ -160,7 +161,7 @@ bindsym $mod+Shift+e exit
 # we don't want automatic back and forth
 workspace_auto_back_and_forth no
 
-# enable xwayland
+# disable xwayland
 xwayland disable
 
 #: }}}
@@ -188,7 +189,7 @@ include colors.conf
 bar {
     id rustbar
     status_command /usr/bin/i3status-rs $XDG_CONFIG_HOME/i3status-rust/config.toml
-    font pango:SF Mono, Font Awesome 5 Free, Font Awesome 5 Brands, 16
+    font pango:SF Mono, Font Awesome 6 Free, Font Awesome 6 Brands, 16
     # font pango:IBM Plex Mono, Font Awesome 5 Free, Font Awesome 5 Brands, 16
     hidden_state show
     mode dock
@@ -200,11 +201,11 @@ bar {
     workspace_min_width 50
     colors {
            background $base00
-           statusline $base05
+           statusline $base07
            # state             border  bg      text
-           focused_workspace   $base00 $base00 $base0D
-           inactive_workspace  $base00 $base00 $base04
-           urgent_workspace    $base00 $base00 $base08
+           focused_workspace   $base00 $base00 $base04
+           inactive_workspace  $base00 $base00 $base15
+           urgent_workspace    $base00 $base00 $base01
         }
     }
 
@@ -235,6 +236,7 @@ for_window [app_id="^firefox.*" title="^Library$"]                              
 for_window [app_id="^firefox.*" title="^About Mozilla Firefox$"]                     focus, floating enable
 for_window [app_id="^firefox.*" title="You’ve launched an older version of Firefox"] focus, floating enable
 for_window [app_id="^firefox.*" title="^Page Info -.*"]                              focus, floating enable
+for_window [app_id="^firefox.*" title="^Extension:\ \(Tree Style Tab\)"]             focus, floating enable
 for_window [app_id="flameshot" title="Save screenshot"]                              focus, floating enable
 for_window [app_id="kvantummanager"]                                                 focus, floating enable
 for_window [app_id="^qt[5-6]ct$"]                                                    focus, floating enable
@@ -261,7 +263,7 @@ bindsym $mod+End    workspace $WS2, exec firefox --new-instance --ProfileManager
 bindsym $mod+space  workspace $WS3, exec footclient lf
 
 bindsym $mod+d exec rofi -show run
-bindsym $mod+z exec env TESSEN_DELAY=100 tessen -b rofi
+bindsym $mod+z exec env tessen -d rofi
 bindsym $mod+s exec 'grim -g "$(slurp)" - | swappy -f -'
 bindsym $mod+c exec rofi -show calc -modi calc -no-show-match -no-sort -no-history -no-fixed-num-lines -lines 0
 bindsym $mod+m exec scrlck

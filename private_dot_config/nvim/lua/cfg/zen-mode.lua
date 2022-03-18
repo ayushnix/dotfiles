@@ -6,8 +6,12 @@ end
 
 zen.setup {
   plugins = {
-   tmux = {
-      enabled = true
-    }
-  }
+    tmux = {
+      enabled = true,
+    },
+  },
 }
+
+local map = vim.api.nvim_set_keymap
+local nmap_opt = { noremap = true, silent = true }
+map('n', '<Leader>z', ':ZenMode<CR>', nmap_opt)
