@@ -1,0 +1,81 @@
+#!/bin/sh
+# SPDX-License-Identifier: ISC
+#
+# Copyright (c) 2021 Ayush Agarwal
+#
+# Permission to use, copy, modify, and /or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+# REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+# AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+# INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+# LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+# OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+# PERFORMANCE OF THIS SOFTWARE.
+#
+# -----------------------------------------------------------------------------
+#
+# This script can be used for printing the list of explicitly installed and
+# removed packages in an OpenWrt installation. This list will be helpful during
+# sysupgrades. Please note that it is assumed that ROM packages have NOT been
+# upgraded in an OpenWrt release. If packages installed by the ROM have been
+# upgraded, the output of this script will not be reliable.
+#
+# -----------------------------------------------------------------------------
+#
+# disable warning about use of `local` because busybox ash, used in OpenWRT,
+# supports it
+# shellcheck disable=SC3043
+#
+# -----------------------------------------------------------------------------
+
+# backup the list of packages which were installed and removed
+installed_packages() {
+  local kernel_time pkg_time pkg_list pkg install_reason backup_file
+
+  pkg_list="$(mktemp -q)"
+  backup_file="/etc/config/opkg.installed"
+
+  kernel_time="$(opkg status kernel | grep 'Installed-Time')"
+  kernel_time="${kernel_time#*: }"
+
+  opkg list-installed | cut -d ' ' -f 1 > "$pkg_list"
+
+  printf "%s" "" > "$backup_file"
+  while read -r pkg; do
+    pkg_time="$(opkg status "$pkg" | grep 'Installed-Time')"
+    pkg_time="${pkg_time#*: }"
+    if [ "$pkg_time" = "$kernel_time" ]; then
+      continue
+    fi
+    install_reason="$(opkg status "$pkg" | grep '^Status.*user installed$')"
+    if [ -n "$install_reason" ]; then
+      printf "%s\n" "$pkg" >> "$backup_file"
+    fi
+  done < "$pkg_list"
+
+  rm -f "$pkg_list"
+
+  printf "%s\n" "the list of user installed packages have been backed up in"
+  printf "%s\n" "$backup_file"
+
+  unset -v kernel_time pkg pkg_time pkg_list install_reason backup_file
+}
+
+removed_packages() {
+  local overlay_dir="/overlay/upper/usr/lib/opkg/info/"
+  local backup_file="/etc/config/opkg.removed"
+
+  find "$overlay_dir" -name "*.control" -type c 2> /dev/null \
+    | sed -e "s/^.*\///;s/\.control$//" > "$backup_file"
+
+  printf "%s\n" "the list of user installed packages have been backed up in"
+  printf "%s\n" "$backup_file"
+
+  unset -v opkg_rom_dir opkg_installed opkg_rom_installed
+}
+
+installed_packages
+removed_packages

@@ -10,7 +10,7 @@ validate_file_path() {
   local file_path="$1"
   local regex="^[[:alpha:]][[:alnum:]\/_-]+\.md$"
 
-  if [[ "$file_path" =~ $regex ]]; then
+  if [[ $file_path =~ $regex ]]; then
     return 0
   else
     return 1
@@ -38,7 +38,7 @@ show_help() {
 }
 
 main() {
-  local opt OPTIND
+  local opt
 
   OPTIND=1
   while getopts ":t:s:h" opt; do
@@ -50,7 +50,7 @@ main() {
         exit 0
         ;;
       \?)
-        printf "%s\n" "Invalid Option! -$OPTARG" >&2
+        printf "%s\n" "invalid option! -$OPTARG" >&2
         exit 1
         ;;
       :)

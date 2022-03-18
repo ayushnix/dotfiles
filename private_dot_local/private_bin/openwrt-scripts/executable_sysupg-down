@@ -1,0 +1,181 @@
+#!/bin/sh
+# SPDX-License-Identifier: ISC
+#
+# Copyright (c) 2022 Ayush Agarwal
+#
+# Permission to use, copy, modify, and /or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+# REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+# AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+# INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+# LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+# OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+# PERFORMANCE OF THIS SOFTWARE.
+#
+# -----------------------------------------------------------------------------
+#
+# This script downloads and verifies the latest sysupgrade image. It is meant
+# to be run on OpenWrt.
+#
+# -----------------------------------------------------------------------------
+#
+# disable warning about use of local because busybox ash supports it
+# shellcheck disable=SC3043
+#
+# -----------------------------------------------------------------------------
+
+# disable shellcheck warning about dynamic paths when sourcing files
+# shellcheck disable=SC1091
+if [ -f "$HOME/.local/bin/common-func.sh" ]; then
+  . "$HOME"/.local/bin/common-func.sh
+else
+  printf "%s\n" "unable to find the library file for commonly used functions" >&2
+  exit 1
+fi
+
+if [ -f /etc/openwrt_release ]; then
+  . /etc/openwrt_release
+  plt1="${DISTRIB_TARGET%/*}"
+  plt2="${DISTRIB_TARGET#*/}"
+else
+  _die "unable to find the openwrt release file"
+fi
+
+if ! is_installed jsonfilter; then
+  _die "jsonfilter is not installed"
+fi
+if [ -f /etc/board.json ]; then
+  dev_name="$(jsonfilter -e '@["model"].name' < /etc/board.json)"
+  dev_id="$(jsonfilter -e '@["model"].id' < /etc/board.json)"
+  dev_id1="${dev_id%,*}"
+  dev_id2="${dev_id#*,}"
+else
+  _die "unable to find the device details"
+fi
+if [ -f /etc/ssl/certs/ca-certificates.crt ]; then
+  crt_file="/etc/ssl/certs/ca-certificates.crt"
+else
+  crt_file=""
+fi
+ver=""
+
+ow_ver() {
+  local url="https://api.github.com/repos/openwrt/openwrt/tags"
+  local tmp_file
+  tmp_file="$(mktemp)"
+
+  if [ -n "$crt_file" ]; then
+    uclient-fetch -q --ca-certificate="$crt_file" -O "$tmp_file" "$url" \
+      2> /dev/null || _die "unable to check the latest version"
+  else
+    uclient-fetch -q -O "$tmp_file" "$url" \
+      2> /dev/null || _die "unable to check the latest version"
+  fi
+
+  ver="$(jsonfilter -e '@[*]' < "$tmp_file" 2> /dev/null \
+    | jsonfilter -a -e '@[0].name' 2> /dev/null)"
+  ver="${ver#v}"
+  if [ -z "$ver" ]; then
+    _die "unable to check the latest version"
+  fi
+
+  printf "%s\n" "the installed version of openwrt is $DISTRIB_RELEASE"
+  if [ "$DISTRIB_RELEASE" = "$ver" ]; then
+    printf "%s\n" "the latest version of openwrt is $ver"
+  else
+    printf "%s%b%s%b\n" "the latest version of openwrt is " "$yelclr" "$ver" "$resclr"
+  fi
+  rm -f "$tmp_file"
+  unset -v url tmp_file
+  _confirm "download the $ver sysupgrade image for $dev_name? [Y/n]"
+}
+
+ow_down() {
+  local url1="https://downloads.openwrt.org/releases"
+  local url2="$url1/$ver/targets/$DISTRIB_TARGET"
+  local url="$url2"/openwrt-"$ver"-"$plt1"-"$plt2"-"$dev_id1"_"$dev_id2"-squashfs-sysupgrade.bin
+  local sha="$url2/sha256sums"
+  local sig="$url2/sha256sums.sig"
+
+  if [ -n "$crt_file" ]; then
+    uclient-fetch -q -P /tmp --ca-certificate="$crt_file" "$url" 2> /dev/null \
+      || _die "unable to download the sysupgrade image"
+    uclient-fetch -q -P /tmp --ca-certificate="$crt_file" "$sha" 2> /dev/null \
+      || _die "unable to download the sha256sums"
+    uclient-fetch -q -P /tmp --ca-certificate="$crt_file" "$sig" 2> /dev/null \
+      || _die "unable to download the signed sha256sums"
+  else
+    uclient-fetch -q -P /tmp "$url" 2> /dev/null \
+      || _die "unable to download the sysupgrade image"
+    uclient-fetch -q -P /tmp "$sha" 2> /dev/null \
+      || _die "unable to download the sha256sums"
+    uclient-fetch -q -P /tmp "$sig" 2> /dev/null \
+      || _die "unable to download the signed sha256sums"
+  fi
+  if [ -f /tmp/"${url##*/}" ]; then
+    printf "%s\n" "the sysupgrade image has been downloaded"
+  else
+    _die "unable to download the sysupgrade image"
+  fi
+
+  if is_installed sha256sum; then
+    actual_hash="$(sha256sum /tmp/"${url##*/}" 2> /dev/null)"
+    actual_hash="${actual_hash%% *}"
+    apparent_hash="$(grep "${url##*/}" /tmp/sha256sums)"
+    apparent_hash="${apparent_hash%% *}"
+
+    if [ "$actual_hash" = "$apparent_hash" ]; then
+      printf "%s\n" "sha256sum successfully verified"
+    else
+      _die "sha256sum verification failed!"
+    fi
+  else
+    _warn "sha256sum is not installed, hash verification failed"
+  fi
+
+  if is_installed usign; then
+    if usign -q -V -m /tmp/sha256sums -P /etc/opkg/keys/ 2> /dev/null; then
+      printf "%s\n" "usign signature successfully verified"
+    else
+      die "usign signature verification for the /tmp/sha256sums file failed!"
+    fi
+  else
+    _warn "usign is not installed, signature verification failed"
+  fi
+
+  rm -f /tmp/sha256sums /tmp/sha256sums.sig
+  unset -v url1 url2 url sha sig
+}
+
+help_menu() {
+  printf "%s" "\
+sysupg-down: download, and optionally verify, the latest sysupgrade image
+
+usage: sysupg-down [-h]
+
+  -h    show this help menu
+"
+}
+
+main() {
+  local opt
+  OPTIND=1
+  while getopts ":h" opt; do
+    case "$opt" in
+      h)
+        help_menu
+        exit 0
+        ;;
+      \?) _die "invalid option - $OPTARG" ;;
+    esac
+  done
+  shift "$((OPTIND - 1))"
+
+  ow_ver
+  ow_down
+}
+
+main "$@"

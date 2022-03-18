@@ -1,7 +1,7 @@
 #!/bin/sh
 # SPDX-License-Identifier: ISC
 #
-# Copyright (c) 2022 Ayush Agarwal
+# Copyright (c) 2022 Ayush Agarwal <ayushnix at fastmail dot com>
 #
 # Permission to use, copy, modify, and /or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -17,22 +17,41 @@
 #
 # -----------------------------------------------------------------------------
 #
-# This script is a replacement for xorg-xprop for the sway wayland compositor.
+# this script serves as a pastebin for code, images, and other kinds of files
+# meant to be shared publicly
 #
 # -----------------------------------------------------------------------------
 
-WAPPID="$(swaymsg -t get_tree | jq -r '.. | select(.type?) | select(.focused==true) | .app_id')"
-WTITLE="$(swaymsg -t get_tree | jq -r '.. | select(.type?) | select(.focused==true) | .name')"
-XCLASS="$(swaymsg -t get_tree | jq -r '.. | select(.type?) | select(.focused==true) | .window_properties.class')"
-XINSTE="$(swaymsg -t get_tree | jq -r '.. | select(.type?) | select(.focused==true) | .window_properties.instance')"
-
-if [ "$WAPPID" != "null" ]; then
-  notify-send "The app_id is '$WAPPID' and the title is '$WTITLE'"
-  exit 0
-elif [ -n "$XCLASS" ] && [ -n "$XINSTE" ]; then
-  notify-send "The class is '$XCLASS' and the instance is '$XINSTE'"
-  exit 0
+# disable shellcheck warning about dynamic paths when sourcing files
+# shellcheck disable=SC1091
+if [ -f "$HOME/.local/bin/common-func.sh" ]; then
+  . "$HOME"/.local/bin/common-func.sh
 else
-  notify-send "Unable to determine the window properties"
+  printf "%s\n" "unable to find the library file for commonly used functions" >&2
   exit 1
 fi
+
+main() {
+  if ! is_installed curl; then
+    _die "curl is not installed"
+  fi
+  if ! is_installed fzf; then
+    _die "fzf is not installed"
+  fi
+
+  services="\
+0x0
+paste.rs
+clbin"
+
+  txtbin="$(printf "%s" "$services" | fzf)"
+  arg="${1:-/dev/stdin}"
+
+  case "$txtbin" in
+    0x0) curl -sF 'file=@-' https://0x0.st < "$arg" ;;
+    paste.rs) curl --data-binary '@-' https://paste.rs < "$arg" ;;
+    clbin) curl -sF 'clbin=<-' https://clbin.com < "$arg" ;;
+  esac
+}
+
+main "$@"

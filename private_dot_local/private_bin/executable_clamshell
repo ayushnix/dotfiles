@@ -1,11 +1,9 @@
 #!/bin/sh
 
-set -u
-
-readonly monitor="eDP-1"
+monitor="eDP-1"
 
 if grep -q open /proc/acpi/button/lid/LID/state; then
-  swaymsg output "$monitor" enable
+  swaymsg output "$monitor" enable || _die "unable to enable $monitor"
 else
-  swaymsg output "$monitor" disable
+  swaymsg output "$monitor" disable || _die "unable to disable $monitor"
 fi

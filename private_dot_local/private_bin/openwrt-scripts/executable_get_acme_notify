@@ -1,0 +1,117 @@
+#!/bin/sh
+# SPDX-License-Identifier: ISC
+#
+# Copyright (c) 2022 Ayush Agarwal
+#
+# Permission to use, copy, modify, and /or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+# REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+# AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+# INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+# LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+# OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+# PERFORMANCE OF THIS SOFTWARE.
+#
+# -----------------------------------------------------------------------------
+#
+# The OpenWrt official repositories do not include the notify scripts in the
+# acme.sh package. This script is meant to download the mail.sh notification
+# script which can be found on the link
+#
+# https://github.com/acmesh-official/acme.sh/blob/master/notify/mail.sh
+#
+# If needed, this script can be adapted to download other notification scripts
+# as well. Yes, I'm aware that downloading scripts from the Internet and
+# running them in your router can be a massive security risk. The downloaded
+# script should be verified by the person who uses this script.
+#
+# -----------------------------------------------------------------------------
+#
+# don't warn about `local` because busybox ash supports it
+# shellcheck disable=SC3043
+#
+# -----------------------------------------------------------------------------
+
+# disable shellcheck warning about dynamic paths when sourcing files
+# shellcheck disable=SC1091
+if [ -f "$HOME/.local/bin/common-func.sh" ]; then
+  . "$HOME"/.local/bin/common-func.sh
+else
+  printf "%s\n" "unable to find the library file for commonly used functions" >&2
+  exit 1
+fi
+
+# initialize global variables with default values
+url_mailsh="https://raw.githubusercontent.com/acmesh-official/acme.sh/master/notify/mail.sh"
+acme_notify_home="/usr/lib/acme/notify"
+ca_cert_loc="/etc/ssl/certs/ca-certificates.crt"
+
+check_files() {
+  printf "%s\n" "checking if the notify files are available ..."
+  uclient-fetch -q -s --ca-certificate="$ca_cert_loc" "$url_mailsh" \
+    || _die "mail.sh notify script is not present in the given URL"
+}
+
+download_files() {
+  printf "%s\n" "downloading notify hook scripts in $acme_notify_home ..."
+  # doesn't overwrite a file so we exit in main() if file is already present
+  uclient-fetch -q --ca-certificate="$ca_cert_loc" -P "$acme_notify_home" -T 15 \
+    "$url_mailsh" || _die "unable to download the mail.sh notify script"
+}
+
+help_menu() {
+  printf "%s" "\
+this script will download the latest copy of mail.sh script at
+
+$url_mailsh
+
+at the following location
+
+$acme_notify_home
+
+if acme is installed.
+"
+}
+
+main() {
+  if ! is_installed uclient-fetch; then
+    _die "uclient-fetch is not installed"
+  fi
+
+  # if acme is installed, create a folder for the notification script if it
+  # doesn't exist
+  if [ -d "${acme_notify_home%/*}" ]; then
+    mkdir -p "$acme_notify_home" \
+      || _die "unable to create the notify dir in ${acme_notify_home%/*}"
+  else
+    _die "acme is not installed"
+  fi
+
+  # if the script is already present, don't download it again
+  if [ -f "$acme_notify_home/${url_mailsh##*/}" ]; then
+    _die
+  fi
+
+  # parse the arguments for the help menu
+  OPTIND=1
+  while getopts ":h" opt; do
+    case "$opt" in
+      h)
+        help_menu
+        exit 0
+        ;;
+      \?) _die "invalid option! - $OPTARG" ;;
+      :) _die "-$OPTARG needs an argument" ;;
+    esac
+  done
+  shift "$((OPTIND - 1))"
+
+  check_files
+  download_files
+  chmox "$acme_notify_home/${url_mailsh##*/}"
+}
+
+main "$@"

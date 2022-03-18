@@ -1,8 +1,6 @@
 #!/bin/sh
 # remove package from local repository used by aurutils
 
-set -u
-
 if [ "$#" -eq 0 ]; then
   printf 'usage: aur remove package [package ...]\n' >&2
   exit 1

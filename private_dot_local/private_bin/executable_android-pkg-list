@@ -1,53 +1,113 @@
 #!/bin/bash
+# SPDX-License-Identifier: ISC
 #
-# This script helps connect to your Android and generates the list of
-# user-installed packages. It assumes that you've enabled "Wireless Debugging"
-# on your Android, have paired your device with your Android, and only need to
-# connect to it, if not already connected.
+# Copyright (c) 2022 Ayush Agarwal
 #
-# The only dependency that this script has is adb, besides bash itself.
+# Permission to use, copy, modify, and /or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
 #
-# If you want to use this script, you can pass the hostname of your Android as
-# an argument
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+# REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+# AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+# INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+# LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+# OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+# PERFORMANCE OF THIS SOFTWARE.
 #
-# $ android-pkg-list my-android-host-name
+# -----------------------------------------------------------------------------
+#
+# This script connects to an android device and generates a list of
+# user-installed applications. It is assumed that
+#
+# - 'wireless debugging' is enabled on the android device
+# - the android device is paired with adb on the system on which this script
+#   will be run
+#
+# -----------------------------------------------------------------------------
 
-if ! command -v adb > /dev/null 2>&1; then
-  printf "%s\n" "adb is not installed" >&2
+# disable shellcheck warning about dynamic paths when sourcing files
+# shellcheck disable=SC1091
+if [[ -f "$HOME/.local/bin/common-func.sh" ]]; then
+  . "$HOME"/.local/bin/common-func.sh
+else
+  printf "%s\n" "unable to find the library file for commonly used functions" >&2
   exit 1
 fi
 
 connect_android() {
-  printf "%s\n" "Enter the port number of $android_hostname:"
+  local portnum
+
+  printf "%s\n" "enter the wireless debugging port number of $1:"
   read -r portnum
-  adb connect "$android_hostname":"$portnum" > /dev/null || {
-    printf "%s\n" "Unable to connect to $android_hostname"
-    exit 1
-  }
+  adb connect "$1":"$portnum" > /dev/null 2>&1 \
+    || _die "unable to connect to $1"
+
+  unset -v portnum
 }
 
 gen_pkg_list() {
-  local -a pkg_list
+  local -a pkglist
   local pkglist_file
-  mapfile -t pkg_list < <(adb shell "pm list packages -3")
+
+  mapfile -t pkglist < <(adb shell "pm list packages -3" \
+    || _die "unable to gain shell access to $1")
+
   pkglist_file="${XDG_DATA_HOME:-$HOME/.local/share}/android-pkgs.txt"
 
-  printf "%s\n" "${pkg_list[@]#*:}" > "$pkglist_file"
+  if [[ -n ${pkglist[*]} ]]; then
+    printf "%s\n" "${pkglist[@]#*:}" > "$pkglist_file" \
+      && printf "%s\n" "android package list updated successfully"
+  fi
+
+  unset -v pkglist pkglist_file
+}
+
+help_menu() {
+  printf "%s" "\
+android-pkg-list: generate a list of user-installed applications on an android
+
+by default, the list of applications will be saved in
+${XDG_DATA_HOME:-$HOME/.local/share}/android-pkgs.txt
+
+usage: android-pkg-list [hostname or IP address of the android device]
+"
 }
 
 main() {
-  local android_hostname="${1:-venus}"
-  shift
+  if ! is_installed adb; then
+    _die "adb is not installed"
+  fi
 
-  # this loop is needed because, sometimes, a connection between your host and
-  # Android may not be established in time for the `gen_pkg_list` function to
-  # succeed
-  while ! adb devices | grep -q "$android_hostname"; do
-    connect_android
-    sleep 1
+  OPTIND=1
+  while getopts ":h" opt; do
+    case "$opt" in
+      h)
+        help_menu
+        exit 0
+        ;;
+      \?) _die "invalid option! - $OPTARG" ;;
+    esac
   done
+  shift "$((OPTIND - 1))"
 
-  gen_pkg_list
+  local android_hostname="${1:-venus}"
+
+  # this loop is needed because, sometimes, a connection between the host and
+  # android may not be established in time for the `gen_pkg_list` function to
+  # succeed
+  set -o pipefail
+  while ! adb devices 2> /dev/null | grep -q "$android_hostname"; do
+    connect_android "$android_hostname"
+    sleep 2
+  done
+  set +o pipefail
+
+  gen_pkg_list "$android_hostname"
+
+  adb kill-server > /dev/null 2>&1 || _warn "unable to kill the android adb server"
+
+  unset -v android_hostname
 }
 
 main "$@"

@@ -1,0 +1,55 @@
+#!/bin/bash
+#
+# This is a preview script for the lf file manager.
+#
+# For the sake of speed and efficiency, it is assumed that the binaries being
+# used in this script are already present in the system and their presence
+# isn't verified.
+#
+# This script is inspired from scope.sh provided by ranger
+# https://github.com/ranger/ranger/blob/master/ranger/data/scope.sh
+
+prv_f="$1"
+if [[ -L "$1" ]]; then
+  prv_f="$(readlink -f "$1")"
+fi
+ext_f="${prv_f##*.}"
+ext_f="${ext_f,,}"
+
+handle_mime() {
+  mime_type="$(file -b --mime-type "$prv_f")"
+
+  case "$mime_type" in
+    text/*) bat --paging always --color always "$prv_f" ;;
+    *) printf "%s\n" "unknown" ;;
+  esac
+}
+
+image_info() {
+  printf "%s" "Aspect Ratio : "
+  identify -format "%[fx:w/h]" "$prv_f"
+  printf "\n%s" "Width        : "
+  identify -format "%[fx:w]" "$prv_f"
+  printf "\n%s" "Height       : "
+  identify -format "%[fx:h]" "$prv_f"
+  printf "\n%s" "Bit Depth    : "
+  identify -format "%[bit-depth]" "$prv_f"
+  printf "\n%s\n" "---"
+
+  mapfile -t exif_metadata < <(identify -format "%[EXIF:*]" "$prv_f")
+  if [[ -n "${exif_metadata[*]}" ]]; then
+    printf "%s\n" "Potentially Harmful EXIF Metadata"
+    printf "%s\n" "${exif_metadata[@]#*:}"
+  fi
+}
+
+case "$ext_f" in
+  md) glow -s dark "$prv_f" ;;
+  json) jq -C -r . "$prv_f" ;;
+  pdf) pdftotext -l 5 -nopgbrk -nodiag -q "$prv_f" - ;;
+  torrent) transmission-show "$prv_f" ;;
+  mkv | mp4 | webm | avi | mp3 | aac | ogg | flac | wav) mediainfo "$prv_f" ;;
+  jpg | png | webp | avif) image_info ;;
+  zip | tar | gz) bsdtar -t -f "$prv_f" ;;
+  *) handle_mime ;;
+esac

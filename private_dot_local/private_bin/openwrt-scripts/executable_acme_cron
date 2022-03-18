@@ -1,0 +1,64 @@
+#!/bin/sh
+# SPDX-License-Identifier: ISC
+#
+# Copyright (c) 2022 Ayush Agarwal
+#
+# Permission to use, copy, modify, and /or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+# REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+# AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+# INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+# LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+# OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+# PERFORMANCE OF THIS SOFTWARE.
+#
+# -----------------------------------------------------------------------------
+#
+# This script is meant to be run as a cron job in OpenWrt routers and APs to
+# renew a certificate.
+#
+# -----------------------------------------------------------------------------
+
+# disable shellcheck warning about dynamic paths when sourcing files
+# shellcheck disable=SC1091
+if [ -f "$HOME/.local/bin/common-func.sh" ]; then
+  . "$HOME"/.local/bin/common-func.sh
+else
+  printf "%s\n" "unable to find the library file for commonly used functions" >&2
+  exit 1
+fi
+
+# get the system hostname
+host_name="$(uci get system.@system[0].hostname)"
+# the acme dir where certificate data is kept
+acme_home="/etc/acme"
+# the acme dir where the logs are kept if the router/AP has a USB slot
+acme_logdir="/mnt/data/acme"
+# the location of the acme.sh script
+acme_sh="/usr/lib/acme/acme.sh"
+# dns_provider
+dns_oem="dns_porkbun"
+
+case "$host_name" in
+  sun)
+    if ! [ -d "$acme_logdir" ]; then
+      mkdir -p "$acme_logdir"
+      touch "$acme_logdir"/acme.log
+    fi
+    # ocsp stapling is added as well because we're using nginx in sun
+    $acme_sh --home "$acme_home" --cron --dns "$dns_oem" -k ec-256 --always-force-new-domain-key --ecc --ocsp --log "$acme_logdir"/acme.log
+    ;;
+  halley)
+    if ! [ -f /var/log/acme.log ]; then
+      touch /var/log/acme.log
+    fi
+    # halley doesn't have the disk space to use nginx and uhttpd doesn't support ocsp stapling
+    $acme_sh --home "$acme_home" --cron --dns "$dns_oem" -k ec-256 --always-force-new-domain-key --ecc --log /var/log/acme.log
+    ;;
+  *)
+    _die "unknown hostname detected"
+    ;;
+esac
