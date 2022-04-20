@@ -5,6 +5,7 @@ name = "awesome5"
 [icons.overrides]
 thermometer-full = "\uf2c7"
 thermometer-empty = "\uf2cb"
+cpu = "\uf2db"
 
 [[block]]
 block = "custom"
