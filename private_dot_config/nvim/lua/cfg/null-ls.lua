@@ -1,17 +1,14 @@
-local ok, _ = pcall(require, 'null-ls')
+local ok, nls = pcall(require, 'null-ls')
 if not ok then
   vim.notify('unable to find null-ls')
   return
 end
 
-local fn = vim.fn
-local null = require('null-ls')
-local format = null.builtins.formatting
-local linter = null.builtins.diagnostics
+local fn, api, fmt, lnt = vim.fn, vim.api, nls.builtins.formatting, nls.builtins.diagnostics
+local augrp, autocmd = api.nvim_create_augroup, api.nvim_create_autocmd
 
 local cfg_path = {
   fn.expand('~/.config/stylua/stylua.toml'),
-  fn.expand('~/.config/selene/selene.toml'),
 }
 for _, v in pairs(cfg_path) do
   if fn.filewritable(v) ~= 1 then
@@ -20,36 +17,34 @@ for _, v in pairs(cfg_path) do
   end
 end
 
--- specify the list of linters and formatters you want to use in this table
 local src = {
-  format.shfmt.with {
+  -- formatters
+  fmt.shfmt.with {
     extra_args = { '-s', '-i', '2', '-ci', '-sr', '-bn' },
   },
-  linter.shellcheck.with {
-    diagnostics_format = '[#{c}] #{m} (#{s})',
-  },
-  format.stylua.with {
+  fmt.stylua.with {
     extra_args = { '-f', cfg_path[1] },
   },
-  linter.yamllint,
-  -- pretty nice linter, wouldn't you agree?
-  -- https://github.com/Kampfkarren/selene/issues/339
-  -- linter.selene.with {
-  --   extra_args = { '--config', cfg_path[2] },
-  -- },
+  -- linters
+  lnt.yamllint,
+  lnt.shellcheck.with {
+    diagnostics_format = '[#{c}] #{m} (#{s})',
+  },
 }
 
-null.setup {
+nls.setup {
   sources = src,
   on_attach = function(client)
     -- format on save
     if client.resolved_capabilities.document_formatting then
-      vim.cmd([[
-        augroup LspFormatting
-          autocmd! * <buffer>
-          autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
-        augroup END
-        ]])
+      local lspfmt = augrp('null-ls-fmt', { clear = true })
+      autocmd('BufWritePre', {
+        -- the buffer 0 is an alias for the current buffer
+        buffer = 0,
+        group = lspfmt,
+        desc = 'format on save',
+        command = 'lua vim.lsp.buf.formatting_sync()',
+      })
     end
   end,
 }

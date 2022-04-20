@@ -4,4 +4,6 @@ if not ok then
   return
 end
 
-gitsign.setup()
+gitsign.setup {
+  attach_to_untracked = false,
+}

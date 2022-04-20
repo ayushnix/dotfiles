@@ -1,7 +1,8 @@
 -- NEOVIM PLUGINS
 
--- API aliases
-local fn, cmd = vim.fn, vim.cmd
+-- lua api aliases
+local g, o, fn, opt, api = vim.g, vim.o, vim.fn, vim.opt, vim.api
+local cmd = api.nvim_command
 
 -- install packer.nvim if it isn't already installed
 local packer_bootstrap = nil
@@ -35,14 +36,6 @@ packer.init {
   },
 }
 
--- update plugins if this file is written to
-cmd([[
-  augroup packer_update
-    autocmd!
-    autocmd BufWritePost plugins.lua source <afile> | PackerCompile
-  augroup end
-]])
-
 local cfg = function(name)
   return string.format('require("cfg.%s")', name)
 end
@@ -55,83 +48,33 @@ return require('packer').startup(function(use)
   -- a plugin often used as a dependency by other plugins
   use { 'nvim-lua/plenary.nvim', module = 'plenary' }
 
-  -- replacement for filetype.vim
-  -- this might become redundant with nvim v0.7 and above
-  -- https://github.com/nathom/filetype.nvim/issues/68
-  use {
-    'nathom/filetype.nvim',
-    disable = true,
-    setup = {
-      vim.cmd('runtime! autoload/dist/ft.vim'),
-    },
-  }
+  -- remove search highlight after the search is over
+  -- TODO: port this to Lua
+  use('romainl/vim-cool')
 
-  -- the colorscheme that I like for dark mode
+  -- a dark medium contrast colorscheme that, more or less, obeys WCAG AAA
   use {
     'navarasu/onedark.nvim',
-    -- disable = true,
-    config = cfg('onedark'),
+    config = cfg('dark-colorscheme'),
   }
 
-  -- use lualine for a more informative statusline when using linters
-  use {
-    'nvim-lualine/lualine.nvim',
-    config = cfg('lualine'),
-  }
-
-  -- faster, but buggy, syntax highlighting and code folding
+  -- usually faster (but somewhat buggy) syntax highlighting and code folding
   use {
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate',
     config = cfg('treesitter'),
   }
 
-  -- a minimal and focused editing experience
-  use {
-    'folke/zen-mode.nvim',
-    cmd = 'ZenMode',
-    config = cfg('zen-mode'),
-  }
-
-  -- jump to characters using hop
-  use {
-    'phaazon/hop.nvim',
-    branch = 'v1',
-    cmd = { 'HopPattern', 'HopChar1CurrentLine' },
-    config = cfg('hop'),
-  }
-
-  -- create and delete pairs using mini.pairs
-  -- surround regions with characters using mini.surround
-  use {
-    'echasnovski/mini.nvim',
-    branch = 'stable',
-    config = cfg('mini'),
-  }
-
-  -- insert comments using kommentary
-  -- could've used mini.comment but it doesn't support multi-line comments
-  use {
-    'b3nj5m1n/kommentary',
-    config = cfg('comments'),
-  }
-
-  -- use null-ls for linting and formatting code
+  -- linting and formatting code using native LSP
   use {
     'jose-elias-alvarez/null-ls.nvim',
     config = cfg('null-ls'),
   }
 
-  -- indent indicators for languages
+  -- indent indicators
   use {
     'lukas-reineke/indent-blankline.nvim',
     config = cfg('indent'),
-  }
-
-  -- show colors inside files
-  use {
-    'norcalli/nvim-colorizer.lua',
-    cmd = 'ColorizerToggle',
   }
 
   -- use fzf.lua because telescope find_files is slower than native fzf, even
@@ -143,27 +86,63 @@ return require('packer').startup(function(use)
     config = cfg('fzf'),
   }
 
-  -- not sure why I'd use this when I have zoxide but we'll keep it for now
-  use {
-    'is0n/fm-nvim',
-    -- cmd = 'Xplr',
-    config = cfg('fm'),
-  }
-
-  -- use zoxide inside vim to jump to dirs
+  -- use zoxide inside nvim to cd to dirs
   use {
     'nanotee/zoxide.vim',
     cmd = {
       'Z',
       'Zi',
     },
-    config = cfg('z'),
+    config = cfg('zoxide'),
+  }
+
+  -- use comment.nvim because it allows using both single line and block level
+  -- comments using different keymappings
+  use {
+    'numToStr/Comment.nvim',
+    config = cfg('comment'),
+  }
+
+  -- mini.pairs - create and delete pairs automatically
+  -- mini.surround - surround regions with characters
+  -- mini.tabline - show a minimal tabline
+  use {
+    'echasnovski/mini.nvim',
+    branch = 'stable',
+    config = cfg('mini'),
+  }
+
+  -- jump to characters
+  use {
+    'phaazon/hop.nvim',
+    branch = 'v1',
+    cmd = { 'HopChar1CurrentLine', 'HopChar2' },
+    config = cfg('hop'),
+  }
+
+  -- use lualine for a more informative statusline when using linters
+  use {
+    'nvim-lualine/lualine.nvim',
+    config = cfg('lualine'),
   }
 
   -- use git signs to show added/changed/deleted lines
   use {
     'lewis6991/gitsigns.nvim',
     config = cfg('gitsigns'),
+  }
+
+  -- a minimal and focused editing experience
+  use {
+    'folke/zen-mode.nvim',
+    cmd = 'ZenMode',
+    config = cfg('zen-mode'),
+  }
+
+  -- show colors inside files
+  use {
+    'norcalli/nvim-colorizer.lua',
+    cmd = 'ColorizerToggle',
   }
 
   if packer_bootstrap then

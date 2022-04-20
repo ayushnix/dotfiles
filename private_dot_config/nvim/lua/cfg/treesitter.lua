@@ -14,6 +14,8 @@ configs.setup {
     'lua',
     'vim',
     'python',
+    'html',
+    'css',
     'markdown',
   },
   highlight = {

@@ -18,8 +18,10 @@ end
 
 local srd = {
   mappings = {
+    -- remove the assigned keybindings to these actions because they aren't being used
     find = '',
     find_left = '',
+    highlight = '',
     update_n_lines = '',
   },
 }

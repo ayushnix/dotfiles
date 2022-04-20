@@ -4,4 +4,6 @@ if not ok then
   return
 end
 
-hop.setup {}
+hop.setup {
+  char2_fallback_key = '<cr>',
+}

@@ -48,6 +48,10 @@ fzf.setup {
     file_icons = false,
     color_icons = false,
   },
+  lsp = {
+    -- make lsp requests synchronous so they work with null-ls
+    async_or_timeout = 3000,
+  },
 }
 
 fzf.all_files = function()
