@@ -93,7 +93,7 @@ user_pref("privacy.userContext.ui.enabled", true);
 
 /* 2000 */
 user_pref("media.eme.enabled", false);
-user_pref("browser.eme.ui.enabled", false)
+user_pref("browser.eme.ui.enabled", false);
 user_pref("media.gmp-provider.enabled", false);
 user_pref("media.peerconnection.enabled", false);
 user_pref("media.getusermedia.screensharing.enabled", false);
