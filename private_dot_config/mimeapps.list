@@ -10,3 +10,4 @@ application/epub+zip=org.pwmt.zathura.desktop
 application/x-mobipocket-ebook=org.pwmt.zathura.desktop
 image/png=imv.desktop
 image/jpeg=imv.desktop
+image/svg+xml=imv.desktop
