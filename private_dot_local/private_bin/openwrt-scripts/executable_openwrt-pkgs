@@ -31,6 +31,15 @@
 #
 # -----------------------------------------------------------------------------
 
+# disable shellcheck warning about dynamic paths when sourcing files
+# shellcheck disable=SC1091
+if [ -f "$HOME/.local/bin/common-func.sh" ]; then
+  . "$HOME"/.local/bin/common-func.sh
+else
+  printf "%s\n" "unable to find the library file for commonly used functions" >&2
+  exit 1
+fi
+
 # backup the list of packages which were installed and removed
 installed_packages() {
   local kernel_time pkg_time pkg_list pkg install_reason backup_file
@@ -71,11 +80,38 @@ removed_packages() {
   find "$overlay_dir" -name "*.control" -type c 2> /dev/null \
     | sed -e "s/^.*\///;s/\.control$//" > "$backup_file"
 
-  printf "%s\n" "the list of user installed packages have been backed up in"
+  printf "%s\n" "the list of user removed packages have been backed up in"
   printf "%s\n" "$backup_file"
 
   unset -v opkg_rom_dir opkg_installed opkg_rom_installed
 }
 
-installed_packages
-removed_packages
+help_menu() {
+  printf "%s" "\
+openwrt-pkgs: backup list of user installed and removed packages
+
+usage: openwrt-pkgs [-h]
+
+  -h    show this help menu
+"
+}
+
+main() {
+  local opt
+  OPTIND=1
+  while getopts ":h" opt; do
+    case "$opt" in
+      h)
+        help_menu
+        exit 0
+        ;;
+      \?) _die "invalid option - $OPTARG" ;;
+    esac
+  done
+  shift "$((OPTIND - 1))"
+
+  installed_packages
+  removed_packages
+}
+
+main "$@"
