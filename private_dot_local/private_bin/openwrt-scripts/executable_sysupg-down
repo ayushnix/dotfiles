@@ -75,9 +75,8 @@ ow_ver() {
       2> /dev/null || _die "unable to check the latest version"
   fi
 
-  ver="$(jsonfilter -e '@[*]' < "$tmp_file" 2> /dev/null \
-    | jsonfilter -a -e '@[0].name' 2> /dev/null)"
-  ver="${ver#v}"
+  ver="$(jsonfilter -e '@[*].name' < "$tmp_file" 2> /dev/null \
+    | sed -e "/-rc/d;s/^v//;q")"
   if [ -z "$ver" ]; then
     _die "unable to check the latest version"
   fi
