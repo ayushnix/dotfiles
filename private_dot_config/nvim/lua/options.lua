@@ -59,6 +59,11 @@ local options = {
   lazyredraw = true,
   synmaxcol = 240,
   clipboard = 'unnamedplus',
+  shiftwidth = 2,
+  tabstop = 2,
+  softtabstop = 2,
+  expandtab = true,
+  textwidth = 100,
   background = 'dark',
 }
 for k, v in pairs(options) do
@@ -188,8 +193,8 @@ map({ 'n', 'v' }, '<leader>faf', ':FzfLua all_files<cr>', { silent = true })
 -- packer
 map({ 'n', 'v' }, '<leader>u', ':PackerSync<cr>', { silent = true })
 -- hop
-map({ 'n', 'v' }, 'f', ':HopChar1CurrentLine<cr>', { silent = true })
-map({ 'n', 'v' }, '<leader>h', ':HopChar2<cr>', { silent = true })
+map('n', 'f', ':HopChar1CurrentLine<cr>', { silent = true })
+map('n', '<leader>h', ':HopChar2<cr>', { silent = true })
 -- colorizer
 map({ 'n', 'v' }, '<leader>c', ':ColorizerToggle<cr>', { silent = true })
 -- zoxide
