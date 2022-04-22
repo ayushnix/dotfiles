@@ -52,6 +52,12 @@ return require('packer').startup(function(use)
   -- TODO: port this to Lua
   use('romainl/vim-cool')
 
+  -- use a sensible tabline plugin which doesn't mix buffers into the picture and isn't buggy
+  use {
+    'alvarosevilla95/luatab.nvim',
+    config = cfg('luatab'),
+  }
+
   -- a dark medium contrast colorscheme that, more or less, obeys WCAG AAA
   use {
     'navarasu/onedark.nvim',
@@ -105,7 +111,6 @@ return require('packer').startup(function(use)
 
   -- mini.pairs - create and delete pairs automatically
   -- mini.surround - surround regions with characters
-  -- mini.tabline - show a minimal tabline
   use {
     'echasnovski/mini.nvim',
     branch = 'stable',
