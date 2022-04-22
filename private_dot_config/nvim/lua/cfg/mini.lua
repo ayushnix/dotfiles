@@ -26,11 +26,5 @@ local srd = {
   },
 }
 
-local tabcfg = {
-  show_icons = false,
-  set_vim_settings = false,
-}
-
 pairs.setup()
 surround.setup(srd)
-tab.setup(tabcfg)
