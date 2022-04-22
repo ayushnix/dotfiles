@@ -24,3 +24,12 @@ lualine.setup {
 }
 
 onedark.load()
+
+-- change tabline highlight groups to make them look ... better
+local c = require('onedark.colors')
+-- the active tab
+vim.api.nvim_set_hl(0, 'TabLineSel', { fg = c.blue, bg = c.bg0 })
+-- the inactive tab
+vim.api.nvim_set_hl(0, 'TabLine', { fg = c.grey, bg = c.bg0 })
+-- the tabline empty space
+vim.api.nvim_set_hl(0, 'TabLineFill', { bg = c.bg0 })
