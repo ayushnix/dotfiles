@@ -1,4 +1,10 @@
--- NEOVIM OPTIONS, VARIABLES, AUTOCMDS, AND KEYMAPS
+-- ---------------------------------------------------- --
+-- # NEOVIM OPTIONS, VARIABLES, AUTOCMDS, AND KEYMAPS # --
+-- ---------------------------------------------------- --
+
+-- ---------------------------------- --
+-- ## GENERAL OPTIONS AND SETTINGS ## --
+-- ---------------------------------- --
 
 -- lua api aliases
 local g, o, fn, opt, api = vim.g, vim.o, vim.fn, vim.opt, vim.api
@@ -76,7 +82,9 @@ end
 g.do_filetype_lua = 1
 g.did_load_filetypes = 0
 
--- AUTOCMDS
+-- -------------- --
+-- ## AUTOCMDS ## --
+-- -------------- --
 
 local cursor = augrp('tmux-cursor', { clear = true })
 autocmd({
@@ -135,21 +143,24 @@ autocmd('BufWritePre', {
   end,
 })
 
--- KEYMAPS
+-- ------------- --
+-- ## KEYMAPS ## --
+-- ------------- --
 -- don't remap <esc>
 -- https://vi.stackexchange.com/q/2614
+-- don't use `:` for starting command names
 
 -- disable arrow keys (why would you use arrow keys in nvim?!)
-map({ 'n', 'v' }, '<up>', '<nop>')
-map({ 'n', 'v' }, '<down>', '<nop>')
-map({ 'n', 'v' }, '<left>', '<nop>')
-map({ 'n', 'v' }, '<right>', '<nop>')
+map('n', '<up>', '<nop>')
+map('n', '<down>', '<nop>')
+map('n', '<left>', '<nop>')
+map('n', '<right>', '<nop>')
 
 -- window navigation
-map({ 'n', 'v' }, '<c-h>', '<c-w>h')
-map({ 'n', 'v' }, '<c-l>', '<c-w>l')
-map({ 'n', 'v' }, '<c-j>', '<c-w>j')
-map({ 'n', 'v' }, '<c-k>', '<c-w>k')
+map('n', '<c-h>', '<c-w>h')
+map('n', '<c-l>', '<c-w>l')
+map('n', '<c-j>', '<c-w>j')
+map('n', '<c-k>', '<c-w>k')
 
 -- keep the search results on the center position during navigation
 map('n', 'n', 'nzz', { silent = true })
@@ -172,32 +183,48 @@ g.mapleader = ' '
 g.maplocalleader = ' '
 
 map({ 'n', 'v' }, ';', ':')
-map({ 'n', 'v' }, '<leader>s', ':w<cr>', { silent = true })
-map({ 'n', 'v' }, '<leader>q', ':wq<cr>', { silent = true })
+map({ 'n', 'v' }, '<leader>s', '<cmd>w<cr>', { silent = true })
+map({ 'n', 'v' }, '<leader>q', '<cmd>wq<cr>', { silent = true })
 
 -- cycle through buffers and tabs
-map({ 'n', 'v' }, '<leader>bn', ':bn<cr>', { silent = true })
-map({ 'n', 'v' }, '<leader>bp', ':bp<cr>', { silent = true })
-map({ 'n', 'v' }, '<leader>tn', ':tabn<cr>', { silent = true })
-map({ 'n', 'v' }, '<leader>tp', ':tabp<cr>', { silent = true })
--- use <c-6> to switch between buffers, which is what `:b#` does
--- remove buffers
-map({ 'n', 'v' }, '<leader>bd', ':bd<cr>', { silent = true })
-map({ 'n', 'v' }, '<leader>bu', ':bun<cr>', { silent = true })
+map({ 'n', 'v' }, '<leader>bn', '<cmd>bn<cr>', { silent = true })
+map({ 'n', 'v' }, '<leader>bp', '<cmd>bp<cr>', { silent = true })
+map({ 'n', 'v' }, '<leader>tn', '<cmd>tabn<cr>', { silent = true })
+map({ 'n', 'v' }, '<leader>tp', '<cmd>tabp<cr>', { silent = true })
+map({ 'n', 'v' }, '<leader>bd', '<cmd>bd<cr>', { silent = true })
+map({ 'n', 'v' }, '<leader>bu', '<cmd>bun<cr>', { silent = true })
 
--- plugin specific mappings
+-- PLUGIN SPECIFIC MAPPINGS
+
 -- fzflua
-map({ 'n', 'v' }, '<leader>fb', ':FzfLua buffers<cr>', { silent = true })
-map({ 'n', 'v' }, '<leader>ff', ':FzfLua files<cr>', { silent = true })
-map({ 'n', 'v' }, '<leader>faf', ':FzfLua all_files<cr>', { silent = true })
+map({ 'n', 'v' }, '<leader>fb', '<cmd>FzfLua buffers<cr>', { silent = true })
+map({ 'n', 'v' }, '<leader>ft', '<cmd>FzfLua tabs<cr>', { silent = true })
+map({ 'n', 'v' }, '<leader>fc', '<cmd>FzfLua commands<cr>', { silent = true })
+map({ 'n', 'v' }, '<leader>ff', '<cmd>FzfLua files<cr>', { silent = true })
+map({ 'n', 'v' }, '<leader>fh', '<cmd>FzfLua help_tags<cr>', { silent = true })
+map({ 'n', 'v' }, '<leader>faf', '<cmd>FzfLua all_files<cr>', { silent = true })
+
 -- packer
-map({ 'n', 'v' }, '<leader>u', ':PackerSync<cr>', { silent = true })
+map({ 'n', 'v' }, '<leader>ps', '<cmd>PackerSync<cr>', { silent = true })
+map({ 'n', 'v' }, '<leader>ps', function()
+  local snapshot_time = os.date('!%Y-%m-%dT%TZ')
+  cmd('PackerSnapshot ' .. snapshot_time .. '.json')
+  cmd('PackerSync')
+end, { expr = true })
+
 -- hop
-map('n', 'f', ':HopChar1CurrentLine<cr>', { silent = true })
-map('n', '<leader>h', ':HopChar2<cr>', { silent = true })
+map({ 'n', 'v' }, 'f', '<cmd>HopChar1CurrentLine<cr>', { silent = true })
+map({ 'n', 'v' }, '<leader>h', '<cmd>HopChar2<cr>', { silent = true })
+
 -- colorizer
-map({ 'n', 'v' }, '<leader>c', ':ColorizerToggle<cr>', { silent = true })
+map({ 'n', 'v' }, '<leader>cl', '<cmd>ColorizerToggle<cr>', { silent = true })
+
 -- zoxide
-map({ 'n', 'v' }, '<leader>j', ':Z')
+map({ 'n', 'v' }, '<leader>cd', ':Z ')
+
 -- zenmode
-map({ 'n', 'v' }, '<leader>z', ':ZenMode<cr>', { silent = true })
+map({ 'n', 'v' }, '<leader>z', '<cmd>ZenMode<cr>', { silent = true })
+
+-- luasnip
+map({ 'i', 's' }, '<c-j>', '<Plug>luasnip-expand-or-jump')
+map({ 'i', 's' }, '<c-k>', '<Plug>luasnip-jump-prev')
