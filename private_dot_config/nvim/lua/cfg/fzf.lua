@@ -24,6 +24,10 @@ fzf.setup {
   actions = {
     files = {
       ['default'] = actions.file_edit,
+      ['ctrl-h'] = actions.file_split,
+      ['ctrl-v'] = actions.file_vsplit,
+      ['ctrl-t'] = actions.file_tabedit,
+      ['alt-q'] = actions.file_sel_to_qf,
     },
   },
   fzf_opts = {
