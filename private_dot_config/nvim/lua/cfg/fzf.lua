@@ -52,6 +52,7 @@ fzf.setup {
     prompt = 'b: ',
     file_icons = false,
     color_icons = false,
+    filename_only = true,
   },
   lsp = {
     -- make lsp requests synchronous so they work with null-ls
