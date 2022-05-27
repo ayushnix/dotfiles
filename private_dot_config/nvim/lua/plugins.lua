@@ -32,8 +32,8 @@ local cfg = function(name)
 end
 
 -- list of plugins
-return require('packer').startup {
-  function()
+return packer.startup {
+  function(use)
     -- package manager for neovim
     use('wbthomason/packer.nvim')
 
@@ -50,7 +50,8 @@ return require('packer').startup {
       config = cfg('luatab'),
     }
 
-    -- a dark medium contrast colorscheme that, more or less, obeys WCAG AAA
+    -- a dark medium contrast colorscheme
+    -- even though it fails WCAG AAA, this is one of the few dark colorschemes that I'm comfortable with
     use {
       'navarasu/onedark.nvim',
       config = cfg('dark-colorscheme'),
