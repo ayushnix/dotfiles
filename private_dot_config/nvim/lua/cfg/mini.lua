@@ -10,12 +10,6 @@ if not s_ok then
   return
 end
 
-local t_ok, tab = pcall(require, 'mini.tabline')
-if not t_ok then
-  vim.notify('unable to find mini.tabline')
-  return
-end
-
 local srd = {
   mappings = {
     -- remove the assigned keybindings to these actions because they aren't being used
