@@ -20,6 +20,11 @@ fzf.setup {
       },
     },
   },
+  actions = {
+    files = {
+      ['default'] = actions.file_edit,
+    },
+  },
   fzf_opts = {
     ['--prompt'] = '∑ ',
     ['--margin'] = '3%,1%',
