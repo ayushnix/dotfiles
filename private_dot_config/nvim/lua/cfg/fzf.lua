@@ -9,11 +9,12 @@ if vim.fn.executable('fzf') ~= 1 then
   return
 end
 
+local actions = require('fzf-lua.actions')
+
 fzf.setup {
   winopts = {
     preview = {
       default = 'cat',
-      -- hidden = 'hidden',
       winopts = {
         number = false,
         cursorline = false,
