@@ -17,6 +17,7 @@ configs.setup {
     'html',
     'css',
     'markdown',
+    'ruby',
   },
   highlight = {
     enable = true,
