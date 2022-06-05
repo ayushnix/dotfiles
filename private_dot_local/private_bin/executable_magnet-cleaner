@@ -1,0 +1,71 @@
+#!/bin/bash
+#
+# SPDX-License-Identifier: 0BSD
+# Copyright (c) 2022 by Ayush Agarwal
+
+# this script will take a magnet link as input and copy a magnet link without
+# any trackers to your clipboard
+# this script is inspired from my annoyance with this issue being ignored in qbittorrent
+# https://github.com/qbittorrent/qBittorrent/issues/5362
+# there's also this
+# https://ktetch.co.uk/2014/01/bittorrent-tracker-madness/
+
+# disable shellcheck warning about dynamic paths when sourcing files
+# shellcheck disable=SC1091
+if [[ -f "$HOME/.local/bin/common-func.sh" ]]; then
+  . "$HOME"/.local/bin/common-func.sh
+else
+  printf "%s\n" "unable to find the library file for commonly used functions" >&2
+  exit 1
+fi
+
+show_help() {
+  printf "%s" "\
+${0##*/} - remove HTTP and UDP trackers from magnet links
+
+usage: ${0##*/} [magnet_link]
+
+       ${0##*/} -h             show this help menu
+"
+}
+
+main() {
+  local opt magex
+
+  OPTIND=1
+  while getopts ":h" opt; do
+    case "$opt" in
+      h)
+        show_help
+        exit 0
+        ;;
+      \?)
+        printf "%s\n" "invalid option! -$OPTARG" >&2
+        exit 1
+        ;;
+      :)
+        printf "%s\n" "-$OPTARG requires an argument" >&2
+        exit 1
+        ;;
+    esac
+  done
+  shift "$((OPTIND - 1))"
+
+  # here's a magnet link for reference; yes, I added two trackers for demonstration, they weren't originally present
+  # magnet:?xt=urn:btih:eb247c990f87ff5f3fee034a291e726ce685f847&dn=archlinux-2022.06.01-x86_64.iso&tr=udp%3a%2f%2ftracker.opentrackr.org%3a1337%2fannounce&tr=udp%3a%2f%2fexodus.desync.com%3a6969%2fannounce
+  # magex="^magnet:?xt=urn:btih:[a-z0-9]+&dn=.+&tr="
+  # magex="^magnet.*&tr="
+  magex="^magnet:\?xt=urn:btih:[a-zA-Z0-9]+&dn=[[:print:]]+&tr="
+  if [[ -n $1 ]] && [[ $1 =~ $magex ]]; then
+    printf "%s\n" "${1%%&tr=*}" | wl-copy -n
+    printf "%s\n" "the actual magnet link has been copied"
+    printf "%s\n" "here's what was copied"
+    printf "%s\n" "${1%%&tr=*}"
+  else
+    _die "error: please specify a valid magnet link"
+  fi
+
+  unset -v opt magex
+}
+
+main "$@"
