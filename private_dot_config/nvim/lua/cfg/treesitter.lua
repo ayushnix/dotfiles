@@ -21,6 +21,9 @@ configs.setup {
   },
   highlight = {
     enable = true,
+    -- disable = function(lang, bufnr)
+    --   return lang == 'markdown' and vim.api.nvim_buf_line_count(bufnr) > 500
+    -- end,
     additional_vim_regex_highlighting = false,
   },
 }

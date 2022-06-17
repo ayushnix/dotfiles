@@ -2,14 +2,20 @@
 -- # NEOVIM OPTIONS, VARIABLES, AUTOCMDS, AND KEYMAPS # --
 -- ---------------------------------------------------- --
 
--- ---------------------------------- --
--- ## GENERAL OPTIONS AND SETTINGS ## --
--- ---------------------------------- --
-
 -- lua api aliases
 local g, o, fn, opt, api = vim.g, vim.o, vim.fn, vim.opt, vim.api
 local cmd = api.nvim_command
 local augrp, autocmd, map = api.nvim_create_augroup, api.nvim_create_autocmd, vim.keymap.set
+
+-- ---------------------------------- --
+-- ## GENERAL OPTIONS AND SETTINGS ## --
+-- ---------------------------------- --
+
+-- disable filetype.vim and enable filetype.lua whenever it becomes usable
+-- https://teddit.net/r/neovim/comments/rvwsl3/introducing_filetypelua_and_a_call_for_help/
+-- https://gpanders.com/blog/whats-new-in-neovim-0-7/#filetypelua
+g.do_filetype_lua = 1
+g.did_load_filetypes = 0
 
 -- quit loading these files as soon as they're sourced
 local runtime_files = {
@@ -75,12 +81,6 @@ local options = {
 for k, v in pairs(options) do
   o[k] = v
 end
-
--- disable filetype.vim and enable filetype.lua whenever it becomes usable
--- https://teddit.net/r/neovim/comments/rvwsl3/introducing_filetypelua_and_a_call_for_help/
--- https://gpanders.com/blog/whats-new-in-neovim-0-7/#filetypelua
-g.do_filetype_lua = 1
-g.did_load_filetypes = 0
 
 -- -------------- --
 -- ## AUTOCMDS ## --

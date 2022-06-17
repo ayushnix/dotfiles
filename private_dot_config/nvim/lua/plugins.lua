@@ -37,6 +37,9 @@ return packer.startup {
     -- package manager for neovim
     use('wbthomason/packer.nvim')
 
+    -- increase performance
+    use('lewis6991/impatient.nvim')
+
     -- a plugin often used as a dependency by other plugins
     use { 'nvim-lua/plenary.nvim', module = 'plenary' }
 
@@ -54,6 +57,7 @@ return packer.startup {
     -- even though it fails WCAG AAA, this is one of the few dark colorschemes that I'm comfortable with
     use {
       'navarasu/onedark.nvim',
+      -- disable = true,
       config = cfg('dark-colorscheme'),
     }
 

@@ -10,6 +10,7 @@ local augrp, autocmd = api.nvim_create_augroup('LSPFormatting', {}), api.nvim_cr
 -- provide a list of config file for formatters and linters which should be found on startup
 local cfg_path = {
   fn.expand('~/.config/stylua/stylua.toml'),
+  fn.expand('~/.config/ansible-lint.yml'),
 }
 for _, v in pairs(cfg_path) do
   if fn.filewritable(v) ~= 1 then
@@ -28,10 +29,16 @@ local src = {
   },
 
   -- LINTERS
-  lint.yamllint,
+  lint.yamllint.with {
+    disabled_filetypes = { 'yaml.ansible' },
+  },
   lint.shellcheck.with {
     diagnostics_format = '[#{c}] #{m} (#{s})',
   },
+  -- ansible-lint is too slow and unreliable to use with neovim
+  -- lint.ansiblelint.with {
+  --   extra_args = { '-c', cfg_path[2] },
+  -- },
 }
 
 nls.setup {
